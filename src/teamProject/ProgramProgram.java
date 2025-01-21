@@ -1,24 +1,23 @@
 package teamProject;
 
 import java.util.ArrayList;
+import java.util.List;
 import java.util.Scanner;
 
+
 public class ProgramProgram implements ConsoleProgram{
-	Scanner sc = new Scanner(System.in);
+	Scanner scan = new Scanner(System.in);
+	ArrayList<Program> list = new ArrayList<Program>();
 	@Override
 	public void run() {
-		ArrayList<Program> program = new ArrayList<Program>();
-		char menu;
-		printMenu();
-		menu=sc.next().charAt(0);
-		runMenu(menu);
+		runMenu();
 	}
 
 	@Override
 	public void printMenu() {
 		System.out.println("=============주간 TV 프로그램=============");
-		System.out.println("1.프로그램 조회              2.프로그램 추가");
-		System.out.println("3.프로그램 수정              4.프로그램 삭제");
+		System.out.println("1.프로그램 추가              2.프로그램 수정");
+		System.out.println("3.프로그램 삭제              4.프로그램 조회");
 		System.out.print("메뉴선택(종료'5'): ");
 	}
 
@@ -35,27 +34,80 @@ public class ProgramProgram implements ConsoleProgram{
 	}
 
 	@Override
-	public void runMenu(char menu) {
+	public void runMenu() {
+		char menu;
 		do {
+			printMenu();
+			menu=scan.next().charAt(0);
+			scan.nextLine();
 			switch(menu) {
-			case'1':insert();
-			case'2':System.out.println("수정하는 메서드");
-			case'3':System.out.println("삭제하는 메서드");
-			case'4':System.out.println("조회하는 메서드");
+			case'1':insert(); break;
+			case'2':update(); break;
+			case'3':delete(); break;
+			case'4':search(); break;
 			case'5':System.out.println("종료합니다"); break;
 			default:System.out.println("잘못된 메뉴선택"); 
 			}
 		}while(menu !='5');
 	}
 
+	private void update() {
+		
+	}
+
+	private void delete() {
+		List<Program> p =search();
+		System.out.print("삭제시킬 번호: ");
+		int index = scan.nextInt()-1;
+		int newindex =list.indexOf(p.get(index));
+		list.remove(newindex);
+		if(newindex<0) {
+			System.out.println("삭제 실패");
+			return;
+		}
+		System.out.println(p.get(index).printAll()+"삭제 성공");
+	}
+
+	private List<Program> search() {
+		//번호를 입력
+		System.out.println("날짜 : ");
+		String day = scan.nextLine();
+		System.out.println("시간 : ");
+		String time = scan.nextLine();
+		
+		Program tmpP = new Program(day, "", "", time);
+		List<Program> p = new ArrayList<>();
+		int index=0;
+		for(int i=0; i<list.size();i++) {
+			if(list.get(i).equals(tmpP)) {
+				p.add(list.get(i));
+				index++;
+				System.out.println(index+". "+p.get(index-1).printAll());
+			}
+		}
+		return p;
+	}
+
 	private void insert() {
 		Program p = inputProgram();
+		list.add(p);
+		System.out.println("프로그램을 등록 했습니다.");
 	}
 
 	private Program inputProgram() {
 		System.out.print("날짜 입력: ");
-		String programDay = sc.nextLine();
-		return null;
+		String programDay = scan.nextLine();
+		
+		System.out.print("프로그램명 : ");
+		String programName = scan.nextLine();
+		
+		System.out.print("설명 : ");
+		String programExpain = scan.nextLine();
+		System.out.print("프로그램 시간: ");
+		
+		String programTime = scan.nextLine();
+		return new Program(programDay,programName,programExpain,programTime);
 	}
+	
 
 }

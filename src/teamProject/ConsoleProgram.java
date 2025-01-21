@@ -5,5 +5,5 @@ public interface ConsoleProgram {
 	public void printMenu();
 	public void load();
 	public void save();
-	public void runMenu(char menu);
+	public void runMenu();
 }
