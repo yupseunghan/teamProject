@@ -1,5 +1,6 @@
 package teamProject;
 
+import java.nio.file.attribute.UserPrincipal;
 import java.util.Objects;
 
 import lombok.AllArgsConstructor;
@@ -12,23 +13,14 @@ public class Program {
 	private String programDay,programName,programExpain,programTime;
 
 	public String printAll() {
-		return programTime+"/ "+programName;
+		return programName+" / "+programTime;
 	}
 
-	@Override
-	public boolean equals(Object obj) {
-		if (this == obj)
+	public boolean checkDay(Program searP) {
+		if(programDay.equals(searP.getProgramDay())) {
 			return true;
-		if (obj == null)
-			return false;
-		if (getClass() != obj.getClass())
-			return false;
-		Program other = (Program) obj;
-		return Objects.equals(programDay, other.programDay) && Objects.equals(programTime, other.programTime);
+		}
+		return false;
 	}
-
-
-	
-	
 	
 }

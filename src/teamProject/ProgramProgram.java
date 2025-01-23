@@ -52,19 +52,23 @@ public class ProgramProgram implements ConsoleProgram{
 	}
 
 	private void update() {
-		
+		List<Program> p =search();
+		System.out.print("수정시킬 번호: ");
+		int index = scan.nextInt()-1;
+		Program oldP=p.get(index);
+		System.out.println("수정할 내용 입력하세요");
+		scan.nextLine();
+		Program newP = inputProgram();
+		int newindex = list.indexOf(oldP);
+		list.set(newindex, newP);
 	}
 
 	private void delete() {
 		List<Program> p =search();
 		System.out.print("삭제시킬 번호: ");
 		int index = scan.nextInt()-1;
-		int newindex =list.indexOf(p.get(index));
-		list.remove(newindex);
-		if(newindex<0) {
-			System.out.println("삭제 실패");
-			return;
-		}
+		Program delP=p.get(index);
+		list.remove(delP);
 		System.out.println(p.get(index).printAll()+"삭제 성공");
 	}
 
@@ -72,17 +76,14 @@ public class ProgramProgram implements ConsoleProgram{
 		//번호를 입력
 		System.out.println("날짜 : ");
 		String day = scan.nextLine();
-		System.out.println("시간 : ");
-		String time = scan.nextLine();
-		
-		Program tmpP = new Program(day, "", "", time);
+		Program searP = new Program(day, "", "", "");
 		List<Program> p = new ArrayList<>();
 		int index=0;
-		for(int i=0; i<list.size();i++) {
-			if(list.get(i).equals(tmpP)) {
-				p.add(list.get(i));
+		for(Program pro : list) {
+			if(pro.checkDay(searP)) {
+				p.add(pro);
 				index++;
-				System.out.println(index+". "+p.get(index-1).printAll());
+				System.out.println(index+". "+pro.printAll());
 			}
 		}
 		return p;
