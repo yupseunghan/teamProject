@@ -3,6 +3,11 @@ package hdj;
 import java.util.List;
 import java.util.Objects;
 
+import lombok.AllArgsConstructor;
+import lombok.Data;
+
+@Data
+@AllArgsConstructor
 public class Broad_Program {
 
 	private BroadcastingCompany broadCom; //방송사
@@ -39,4 +44,6 @@ public class Broad_Program {
 	public Object clone() throws CloneNotSupportedException{
 		return super.clone();
 	}
+
+
 }
