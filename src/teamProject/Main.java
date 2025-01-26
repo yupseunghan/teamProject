@@ -1,13 +1,17 @@
 package teamProject;
 
+<<<<<<< Updated upstream
 import java.text.ParseException;
 import java.util.ArrayList;
 import java.util.Scanner;
 
+=======
+>>>>>>> Stashed changes
 public class Main {
 
 	static Scanner sc =new Scanner(System.in);
 	public static void main(String[] args) {
+<<<<<<< Updated upstream
 		ArrayList<Program> program = new ArrayList<Program>();
 		Program p = new Program(null,"12:30","14:00","무한도전", "꿀잼");
 		char menu;
@@ -34,6 +38,10 @@ public class Main {
 			default:System.out.println("잘못된 메뉴선택");
 			}
 		}while(menu=='5');
+=======
+		ProgramProgram program = new ProgramProgram();
+		program.run();
+>>>>>>> Stashed changes
 	}
 
 }
