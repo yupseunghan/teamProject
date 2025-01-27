@@ -1,15 +1,19 @@
 package teamProject;
 
 
+import lombok.AllArgsConstructor;
 import lombok.Data;
 
 @Data
+@AllArgsConstructor
+
 public class Program {
 
-	private Tv tv;
-	private String programName,programTime,programExpaln;
-	public void print() {
-		System.out.println("==========="+tv+" 채널===========");
-		System.out.println(programTime+"시 "+" | "+programName+" : "+programExpaln);
+	private String programTime,programName,programExpaln;
+
+	@Override
+	public String toString() {
+		return programTime+"시 "+programName+" | 장르: "+programExpaln;
 	}
+	
 }
