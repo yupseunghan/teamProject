@@ -73,18 +73,26 @@ public class ProgramProgram {
 		Program p = new Program(time, name, explan);
 		
 		TvProgram tp = getTvProgram(menu);
-		tp.insert(p);
-		//list.add(tp);
+		if (tp != null) {
+            tp.insert(p);
+            System.out.println("프로그램이 성공적으로 등록되었습니다.");
+        } else {
+            System.out.println("해당 채널을 찾을 수 없습니다.");
+        }
 	}
 
 	private TvProgram getTvProgram(String menu) {
-		
-		return null;
+		for (TvProgram tp : list) {
+            if (tp.getTv().equals(Tv.valueOf(menu))) {
+                return tp; // 해당 메뉴의 TvProgram 반환
+            }
+        }
+        return null;
 	}
 
 	private void menuProgram(String menu,List<TvProgram> tmpList) {
 		System.out.println("==========="+menu+"채널===========");
-		printProgram(tmpList);
+		printProgram(tmpList);//처음 실행시 빈 문자열 출력 여부 해결해야함
 		System.out.println("============================");
 		System.out.println("1.등록  2.수정  3.삭제  4.돌아가기");
 		System.out.print("메뉴 선택 : ");
@@ -92,9 +100,11 @@ public class ProgramProgram {
 
 	private void printProgram(List<TvProgram> tmpList) {
 		int count =1;
-		for(TvProgram tmp:tmpList) {
-			System.out.println(count+++". "+tmp.programs.toString());
-		}	
+		for(int i=0;i<tmpList.size();i++) {
+			//SBS채널에 줄넘김이 안 됨 1. 다음 2. 가 안 나옴
+			//System.out.println(count+++". "+tmpList.get(i).toString());
+		}
+		
 	}
 
 	private void printMenu() {

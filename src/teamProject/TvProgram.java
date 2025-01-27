@@ -12,6 +12,6 @@ public class TvProgram {
 	Tv tv;
 	List<Program> programs;
 	public void insert(Program p) {
-		programs.add(p);
+		this.programs.add(p);
 	}
 }
