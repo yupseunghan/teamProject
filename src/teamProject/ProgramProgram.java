@@ -8,6 +8,7 @@ import java.util.Scanner;
 public class ProgramProgram implements ConsoleProgram{
 	Scanner scan = new Scanner(System.in);
 	ArrayList<Program> list = new ArrayList<Program>();
+	
 	@Override
 	public void run() {
 		runMenu();
@@ -38,15 +39,28 @@ public class ProgramProgram implements ConsoleProgram{
 		char menu;
 		do {
 			printMenu();
-			menu=scan.next().charAt(0);
+			
+			menu = scan.next().charAt(0);
 			scan.nextLine();
+			
 			switch(menu) {
-			case'1':insert(); break;
-			case'2':update(); break;
-			case'3':delete(); break;
-			case'4':search(); break;
-			case'5':System.out.println("종료합니다"); break;
-			default:System.out.println("잘못된 메뉴선택"); 
+			case'1':
+				insert(); 
+				break;
+			case'2':
+				update(); 
+				break;
+			case'3':
+				delete(); 
+				break;
+			case'4':
+				search(); 
+				break;
+			case'5':
+				System.out.println("종료합니다"); 
+				break;
+			default:
+				System.out.println("잘못된 메뉴선택"); 
 			}
 		}while(menu !='5');
 	}
@@ -74,14 +88,26 @@ public class ProgramProgram implements ConsoleProgram{
 
 	private List<Program> search() {
 		//번호를 입력
-		System.out.println("날짜 : ");
+		System.out.print("날짜 : ");
 		String day = scan.nextLine();
+<<<<<<< Updated upstream
 		Program searP = new Program(day, "", "", "");
 		List<Program> p = new ArrayList<>();
 		int index=0;
 		for(Program pro : list) {
 			if(pro.checkDay(searP)) {
 				p.add(pro);
+=======
+		System.out.print("시간 : ");
+		String time = scan.nextLine();
+		
+		Program tmpP = new Program(day, "", "", time);
+		List<Program> p = new ArrayList<Program>();
+		int index = 0;
+		for(int i = 0; i < list.size(); i++) {
+			if(list.get(i).equals(tmpP)) {
+				p.add(list.get(i));
+>>>>>>> Stashed changes
 				index++;
 				System.out.println(index+". "+pro.printAll());
 			}
@@ -104,9 +130,10 @@ public class ProgramProgram implements ConsoleProgram{
 		
 		System.out.print("설명 : ");
 		String programExpain = scan.nextLine();
-		System.out.print("프로그램 시간: ");
 		
+		System.out.print("프로그램 시간: ");
 		String programTime = scan.nextLine();
+		
 		return new Program(programDay,programName,programExpain,programTime);
 	}
 	
