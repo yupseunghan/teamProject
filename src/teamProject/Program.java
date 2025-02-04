@@ -1,26 +1,33 @@
 package teamProject;
 
-import java.nio.file.attribute.UserPrincipal;
 import java.util.Objects;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
 
-@AllArgsConstructor
 @Data
+@AllArgsConstructor
+
 public class Program {
-	static int count=0;
-	private String programDay,programName,programExpain,programTime;
 
-	public String printAll() {
-		return programName+" / "+programTime;
+	private String programTime,programName,programExpaln;
+
+	@Override
+	public String toString() {
+		return programTime+"시 "+programName+" | 장르: "+programExpaln;
 	}
 
-	public boolean checkDay(Program searP) {
-		if(programDay.equals(searP.getProgramDay())) {
+	@Override
+	public boolean equals(Object obj) {
+		if (this == obj)
 			return true;
-		}
-		return false;
+		if (obj == null)
+			return false;
+		if (getClass() != obj.getClass())
+			return false;
+		Program other = (Program) obj;
+		return Objects.equals(programTime, other.programTime);
 	}
-	
+
+
 }
