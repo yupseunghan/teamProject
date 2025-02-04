@@ -1,5 +1,6 @@
 package teamProject;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -12,8 +13,15 @@ import lombok.NoArgsConstructor;
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-public class TvProgram {
-   Tv tv;
+public class TvProgram implements Serializable{
+	
+   /**
+	 * 
+	 */
+	private static final long serialVersionUID = 1532211558314612155L;
+	
+	
+Tv tv;
    List<Program> programs=new ArrayList<Program>();
    public String getTv() {
       return tv.name();

@@ -1,5 +1,6 @@
 package teamProject;
 
+import java.io.Serializable;
 import java.util.Objects;
 
 import lombok.AllArgsConstructor;
@@ -8,8 +9,14 @@ import lombok.Data;
 @Data
 @AllArgsConstructor
 
-public class Program {
+public class Program implements Serializable {
 
+	/**
+	 * 
+	 */
+
+	private static final long serialVersionUID = 1532211558314612155L;
+	
 	private String programTime,programName,programExpaln;
 
 	@Override

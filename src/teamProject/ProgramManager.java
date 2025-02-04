@@ -1,48 +1,70 @@
 package teamProject;
 
 
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
+import java.io.ObjectInputStream;
+import java.io.ObjectOutputStream;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Scanner;
 
+
 public class ProgramManager {
-   List<TvProgram> list = new ArrayList<>();
-   Scanner sc = new Scanner(System.in);
-   
-   public void run() {
-      String menu;
-      do {
-         printMenu();
-         menu= sc.nextLine().trim().toUpperCase();
-         switch(menu){
-         case "SBS","KBS","MBC":
-            view(menu);
-            break;
-         case "EXIT":
-            System.out.println("종료합니다");
-            break;
-         default:
-            System.out.println("잘못된 입력");
-         }
-      }while(!menu.equals("EXIT"));
-      
-   }
-   private void view(String menu) {
-      int choice;
-      do {
-         System.out.println("==========="+menu+"채널===========");
-         Programs(menu);
-         System.out.println("============================");
-         System.out.println("1.등록  2.수정  3.삭제  4.돌아가기");
-         System.out.print("메뉴 선택 : ");
-         choice=sc.nextInt();
-         switch(choice) {
-         case 1:programInsert(menu);
-            break;
-         case 2:
-            programUpdate(menu);
-            break;
-         case 3:
+
+
+	List<TvProgram> list;
+	Scanner sc = new Scanner(System.in);
+
+	public void run() {
+
+		String fileTv = "TvProgram";
+
+			list = (ArrayList<TvProgram>)load(fileName(fileTv));				
+			
+	
+
+		if(list == null || list.size() == 0) {				
+			list = new ArrayList<TvProgram>();					
+		}
+
+		String menu;
+		do {
+			printMenu();
+			menu= sc.nextLine().trim().toUpperCase();
+			switch(menu){
+			case "SBS","KBS","MBC":
+				view(menu);
+			break;
+			case "EXIT":
+				System.out.println("종료합니다");
+				break;
+			default:
+				System.out.println("잘못된 입력");
+			}
+		}while(!menu.equals("EXIT"));
+
+		save(fileName(fileTv),list);
+		
+		
+	}
+	private void view(String menu) {
+		int choice;
+		do {
+			System.out.println("==========="+menu+"채널===========");
+			Programs(menu);
+			System.out.println("============================");
+			System.out.println("1.등록  2.수정  3.삭제  4.돌아가기");
+			System.out.print("메뉴 선택 : ");
+			choice=sc.nextInt();
+			switch(choice) {
+			case 1:programInsert(menu);
+			break;
+			case 2:
+				programUpdate(menu);
+				break;
+			case 3:
             programDelete(menu);
             break;
          case 4:
@@ -161,5 +183,53 @@ public class ProgramManager {
          System.out.println("종료 (EXIT)");
          System.out.print("선택: ");
       }
+
+      
+      private static String fileName(String input) {
+    	  
+    	  return "src/teamProject/" + input +".txt";
+      }
+      
+      
+  	private static Object load(String fileName) {		
+
+  		try(FileInputStream fis = new FileInputStream(fileName);
+  			ObjectInputStream ois = new ObjectInputStream(fis)){
+  		
+  			System.out.println("-----------------");
+			System.out.println("불러왔습니다.");
+			System.out.println("-----------------");
+			
+  			return ois.readObject();	
+  			
+  		} catch (Exception e) {
+  			System.out.println("-------------------");
+  			System.out.println("불러오기 실패");
+  			System.out.println("-------------------");
+  		}
+  		
+  		return null;
+  		
+  	}
+
+  	
+  	private static void save(String fileName, Object obj) {
+  		try(FileOutputStream fos = new FileOutputStream(fileName);
+  			ObjectOutputStream oos = new ObjectOutputStream(fos)){
+  			
+  			oos.writeObject(obj);
+  			
+  		} catch (Exception e) {
+  			System.out.println("-----------------");
+  			System.out.println("저장하기 실패");
+  			System.out.println("-----------------");
+  			return;
+  		}
+  		System.out.println("-----------------");
+			System.out.println("저장되었습니다.");
+			System.out.println("-----------------");
+  	}
+
+
       
    }
