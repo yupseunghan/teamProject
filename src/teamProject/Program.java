@@ -1,4 +1,4 @@
-package teamProject;
+package Tv2;
 
 import java.util.Objects;
 
@@ -10,12 +10,12 @@ import lombok.Data;
 
 public class Program {
 
-	private String programTime,programName,programExpaln;
+   private String programTime,programName,programExpaln;
 
-	@Override
-	public String toString() {
-		return programTime+"시 "+programName+" | 장르: "+programExpaln;
-	}
+   @Override
+   public String toString() {
+      return programTime+"시 "+programName+" | 장르: "+programExpaln;
+   }
 
 	@Override
 	public boolean equals(Object obj) {
@@ -29,5 +29,5 @@ public class Program {
 		return Objects.equals(programTime, other.programTime);
 	}
 
-
+  
 }

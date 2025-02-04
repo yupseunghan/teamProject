@@ -1,5 +1,4 @@
-package teamProject;
-
+package Tv2;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -61,10 +60,11 @@ public class ProgramManager {
        });
        // 각 TvProgram 내부의 프로그램도 시간순으로 정렬
        for (TvProgram tp : list) {
-           tp.getPrograms().sort((p1, p2) -> Integer.compare(Integer.parseInt(p1.getProgramTime()), 
-                                                               Integer.parseInt(p2.getProgramTime())));
+           tp.getPrograms().sort((p1, p2) -> Integer.compare(Integer.parseInt(p1.getProgramTime()),                                                                Integer.parseInt(p2.getProgramTime())));
+           
        }
    }
+   
    private void programDelete(String menu) {
         
         boolean res=false;
@@ -85,14 +85,17 @@ public class ProgramManager {
          System.out.print("삭제 할 시간대를 고르시오: ");
          sc.nextLine();
          String time =sc.nextLine();
+         int index=0;
          for(TvProgram p:old) {
-             res=p.delete(time);
-             if(res) {
+             index=p.delete(time);
+             if(index>-1) {
+            	list.remove(index);
                 System.out.println("삭제 완료!");
+                System.out.println(list);
                 break;
              }   
           }
-          if(!res)System.out.println("시간대가 없어요..");
+          if(index<0)System.out.println("시간대가 없어요..");
          
    }
    
@@ -135,12 +138,22 @@ public class ProgramManager {
    }
       private void programInsert(String menu) {
             Program p = program();
+            for(int i=0;i<list.size();i++) {
+            	if(list.get(i).getTv().equals(Tv.valueOf(menu))) {
+            		list.get(i).insert(p);
+            		System.out.println(list);
+            		return;
+            	}
+            }
             TvProgram tp=new TvProgram(Tv.valueOf(menu),p);
+           
             list.add(tp);
+            System.out.println(list);
             sort();
          }
       
-      private Program program() {
+ 
+	private Program program() {
          System.out.print("시간:");
          sc.nextLine();
          String time =sc.nextLine();
