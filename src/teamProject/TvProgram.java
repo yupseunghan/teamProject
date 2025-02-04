@@ -6,6 +6,9 @@ import java.util.List;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+
+
+
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
@@ -15,6 +18,7 @@ public class TvProgram {
    public String getTv() {
       return tv.name();
    }
+   
    public void showTv(String menu) {
       if(tv.equals(Tv.valueOf(menu))) {
          for(Program p:programs) {
@@ -22,10 +26,12 @@ public class TvProgram {
          }
       }
    }
+   
    public TvProgram(Tv valueOf, Program p) {
       this.tv=valueOf;
       this.programs.add(p);
    }
+   
    public boolean update(Program newP) {
      boolean res=false;
       for(Program p : programs) {
@@ -37,6 +43,7 @@ public class TvProgram {
       }
       return res;
    }
+   
    public boolean delete(String time) {
       boolean res = false;
       for(Program p : programs) {
@@ -45,6 +52,8 @@ public class TvProgram {
             return !res;
          }
       }
+      
+      
       return res;
    }
 }
