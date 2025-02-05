@@ -4,113 +4,131 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Scanner;
 
-public class ProgramProgram {
-	Scanner sc =new Scanner(System.in);
-	List<TvProgram> list = new ArrayList<>();
+
+public class ProgramProgram implements ConsoleProgram{
+	Scanner scan = new Scanner(System.in);
+	ArrayList<Program> list = new ArrayList<Program>();
+	
+	@Override
 	public void run() {
-		list.add(new TvProgram(Tv.KBS, new ArrayList<Program>()));
-		list.add(new TvProgram(Tv.MBC, new ArrayList<Program>()));
-		list.add(new TvProgram(Tv.SBS, new ArrayList<Program>()));
 		runMenu();
 	}
 
-	private void runMenu() {
-		String menu;
+	@Override
+	public void printMenu() {
+		System.out.println("=============주간 TV 프로그램=============");
+		System.out.println("1.프로그램 추가              2.프로그램 수정");
+		System.out.println("3.프로그램 삭제              4.프로그램 조회");
+		System.out.print("메뉴선택(종료'5'): ");
+	}
+
+	@Override
+	public void load() {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void save() {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void runMenu() {
+		char menu;
 		do {
 			printMenu();
-			menu = sc.nextLine().trim().toUpperCase();
+			
+			menu = scan.next().charAt(0);
+			scan.nextLine();
+			
 			switch(menu) {
-			case "SBS":
-				
-				view(menu);
+			case'1':
+				insert(); 
 				break;
-			case "KBS":
-				
-				view(menu);
+			case'2':
+				update(); 
 				break;
-			case "MBC":
-				
-				view(menu);
+			case'3':
+				delete(); 
 				break;
-			case "EXIT":
-				System.out.println("종료합니다");
+			case'4':
+				search(); 
+				break;
+			case'5':
+				System.out.println("종료합니다"); 
 				break;
 			default:
-				System.out.println("잘못된 입력");
+				System.out.println("잘못된 메뉴선택"); 
 			}
-		}while(!menu.equals("EXIT"));
+		}while(menu !='5');
 	}
 
-	private void view(String menu) {
-		List<TvProgram> tmpList = new ArrayList<TvProgram>();
-		for(TvProgram tp:list) {
-			if(tp.getTv().equals(Tv.valueOf(menu))) {
-				tmpList.add(tp);
+	private void update() {
+		List<Program> p =search();
+		System.out.print("수정시킬 번호: ");
+		int index = scan.nextInt()-1;
+		Program oldP=p.get(index);
+		System.out.println("수정할 내용 입력하세요");
+		scan.nextLine();
+		Program newP = inputProgram();
+		int newindex = list.indexOf(oldP);
+		list.set(newindex, newP);
+	}
+
+	private void delete() {
+		List<Program> p =search();
+		System.out.print("삭제시킬 번호: ");
+		int index = scan.nextInt()-1;
+		Program delP=p.get(index);
+		list.remove(delP);
+		System.out.println(p.get(index).printAll()+"삭제 성공");
+	}
+
+	private List<Program> search() {
+		//번호를 입력
+		System.out.print("날짜 : ");
+		String day = scan.nextLine();
+
+		System.out.print("시간 : ");
+		String time = scan.nextLine();
+		
+		Program tmpP = new Program(day, "", "", time);
+		List<Program> p = new ArrayList<Program>();
+		int index = 0;
+		for(int i = 0; i < list.size(); i++) {
+			if(list.get(i).equals(tmpP)) {
+				p.add(list.get(i));
+
+				index++;
+				System.out.println(index+". "+pro.printAll());
 			}
 		}
-		runProgram(menu,tmpList);
+		return p;
 	}
 
-	private void runProgram(String menu, List<TvProgram> tmpList) {
-		int me;
-		do {
-			menuProgram(menu,tmpList);
-			me=sc.nextInt();
-			switch(me) {
-			case 1:insertProgram(menu);break;
-			}
-		}while(me != 4);
+	private void insert() {
+		Program p = inputProgram();
+		list.add(p);
+		System.out.println("프로그램을 등록 했습니다.");
 	}
 
-	private void insertProgram(String menu) {
-		System.out.print("시간:");
-		sc.nextLine();
-		String time =sc.nextLine();
-		System.out.print("이름:");
-		String name =sc.nextLine();
-		System.out.print("설명:");
-		String explan =sc.nextLine();
-		Program p = new Program(time, name, explan);
+	private Program inputProgram() {
+		System.out.print("날짜 입력: ");
+		String programDay = scan.nextLine();
 		
-		TvProgram tp = getTvProgram(menu);
-		if (tp != null) {
-            tp.insert(p);
-            System.out.println("프로그램이 성공적으로 등록되었습니다.");
-        } else {
-            System.out.println("해당 채널을 찾을 수 없습니다.");
-        }
-	}
-
-	private TvProgram getTvProgram(String menu) {
-		for (TvProgram tp : list) {
-            if (tp.getTv().equals(Tv.valueOf(menu))) {
-                return tp; // 해당 메뉴의 TvProgram 반환
-            }
-        }
-        return null;
-	}
-
-	private void menuProgram(String menu,List<TvProgram> tmpList) {
-		System.out.println("==========="+menu+"채널===========");
-		printProgram(tmpList);//처음 실행시 빈 문자열 출력 여부 해결해야함
-		System.out.println("============================");
-		System.out.println("1.등록  2.수정  3.삭제  4.돌아가기");
-		System.out.print("메뉴 선택 : ");
-	}
-
-	private void printProgram(List<TvProgram> tmpList) {
-		int count =1;
-		for(int i=0;i<tmpList.size();i++) {
-			//SBS채널에 줄넘김이 안 됨 1. 다음 2. 가 안 나옴
-			//System.out.println(count+++". "+tmpList.get(i).toString());
-		}
+		System.out.print("프로그램명 : ");
+		String programName = scan.nextLine();
 		
+		System.out.print("설명 : ");
+		String programExpain = scan.nextLine();
+		
+		System.out.print("프로그램 시간: ");
+		String programTime = scan.nextLine();
+		
+		return new Program(programDay,programName,programExpain,programTime);
 	}
+	
 
-	private void printMenu() {
-		System.out.println("===========TV 프로그램 편성표===========");
-		System.out.println("SBS              KBS             MBC");
-		System.out.println("종료 (EXIT)");
-		System.out.print("선택: ");
-	}
 }
