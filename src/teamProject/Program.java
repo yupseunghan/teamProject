@@ -1,34 +1,27 @@
 package teamProject;
-
-import java.nio.file.attribute.UserPrincipal;
-import java.util.Objects;
-
 import lombok.AllArgsConstructor;
 import lombok.Data;
 
-@AllArgsConstructor
 @Data
-public class Program {
-	static int count=0;
-	private String Day, Time, Name, Expain;
+@AllArgsConstructor
 
-	public String printAll() {
-<<<<<<< Updated upstream
-		return programName+" / "+programTime;
-=======
-		return Time + " / " + Name;
->>>>>>> Stashed changes
+public class Program {
+
+
+	private String programTime,programName,programExpaln;
+
+	@Override
+	public String toString() {
+		return programTime+"시 "+programName+" | 장르: "+programExpaln;
+	}
+	
+
 	}
 
 	public boolean checkDay(Program searP) {
 		if(programDay.equals(searP.getProgramDay())) {
 			return true;
-<<<<<<< Updated upstream
-		}
-		return false;
-	}
-	
-=======
+
 		if (obj == null)
 			return false;
 		if (getClass() != obj.getClass())
@@ -44,5 +37,5 @@ public class Program {
 	}
 
 
->>>>>>> Stashed changes
+
 }

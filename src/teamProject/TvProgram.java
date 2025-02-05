@@ -1,18 +1,19 @@
 package teamProject;
 
+
 import java.util.ArrayList;
+
 import java.util.List;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-
-
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
 public class TvProgram {
+
    Tv tv;
    List<Program> programs=new ArrayList<Program>();
    public String getTv() {
@@ -57,3 +58,4 @@ public class TvProgram {
       return res;
    }
 }
+

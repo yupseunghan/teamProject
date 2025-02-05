@@ -1,15 +1,18 @@
 package teamProject;
 
 
+
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
+
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Scanner;
 
 public class ProgramManager {
+
 	List<TvProgram> list;
 	Scanner sc = new Scanner(System.in);
 	
@@ -17,6 +20,7 @@ public class ProgramManager {
 		
 		String fileTv = "TvProgram";
 			list = (ArrayList<TvProgram>)load(fileName(fileTv));	
+
       String menu;
       do {
          printMenu();
@@ -95,6 +99,7 @@ public class ProgramManager {
          for(TvProgram p:old) {
              res=p.delete(time);
              if(res) {
+
                 System.out.println("삭제 완료!");
                 break;
              }   
@@ -103,7 +108,18 @@ public class ProgramManager {
          
    }
    
-   private void programUpdate(String menu) {
+
+   private void deleteP() {
+	   TvProgram tmp = new TvProgram();
+	   for(TvProgram tp : list) {
+		   if(tp.getPrograms().isEmpty()) {
+			   tmp=tp;
+		   }
+	   }
+	   list.remove(tmp);
+   }
+	private void programUpdate(String menu) {
+
          boolean res=false;
          if(list.isEmpty()) {
             System.out.println("리스트가 비어있어요..");
@@ -169,6 +185,7 @@ public class ProgramManager {
          System.out.print("선택: ");
       }
       
+
       private static String fileName(String input) {
     	  
     	  return "src/teamProject/" + input +".txt";
@@ -211,5 +228,6 @@ public class ProgramManager {
 			System.out.println("저장되었습니다.");
 			System.out.println("-----------------");
   	}
+
    }
 

@@ -90,14 +90,7 @@ public class ProgramProgram implements ConsoleProgram{
 		//번호를 입력
 		System.out.print("날짜 : ");
 		String day = scan.nextLine();
-<<<<<<< Updated upstream
-		Program searP = new Program(day, "", "", "");
-		List<Program> p = new ArrayList<>();
-		int index=0;
-		for(Program pro : list) {
-			if(pro.checkDay(searP)) {
-				p.add(pro);
-=======
+
 		System.out.print("시간 : ");
 		String time = scan.nextLine();
 		
@@ -107,7 +100,7 @@ public class ProgramProgram implements ConsoleProgram{
 		for(int i = 0; i < list.size(); i++) {
 			if(list.get(i).equals(tmpP)) {
 				p.add(list.get(i));
->>>>>>> Stashed changes
+
 				index++;
 				System.out.println(index+". "+pro.printAll());
 			}
