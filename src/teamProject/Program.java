@@ -1,33 +1,34 @@
 package teamProject;
 
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
-import java.util.Date;
+import java.util.Objects;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
 
-@AllArgsConstructor
 @Data
+@AllArgsConstructor
+
 public class Program {
-	private Date programDate;
-	private String startTime,endTime;
-	private String programName,programExpain;
-	
-	@Override
-	public String toString() {
-		return "["+getDateStr()+" "+startTime+" ~ "+endTime+"] "+programName+" "+programExpain;
-	}
-	
-	public void setDate(String dateTime) throws ParseException{
-		SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd");
-		this.programDate=format.parse(dateTime);
-	}
-	
-	private String getDateStr() {
-		if(programDate == null)
-			return null;
-		SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd");
-		return format.format(programDate);
-	}
+
+   private String programTime,programName,programExpaln;
+
+   @Override
+   public String toString() {
+      return programTime+"시 "+programName+" | 장르: "+programExpaln;
+   }
+
+   @Override
+   public boolean equals(Object obj) {
+      if (this == obj)
+         return true;
+      if (obj == null)
+         return false;
+      if (getClass() != obj.getClass())
+         return false;
+      Program other = (Program) obj;
+      return Objects.equals(programTime, other.programTime);
+   }
+
+  
 }
+
