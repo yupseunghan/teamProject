@@ -1,5 +1,5 @@
 package teamProject;
 
-enum  Tv {
-	SBS,KBS,MBC
+public enum Tv {
+	 SBS, KBS, MBC;
 }
