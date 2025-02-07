@@ -234,7 +234,7 @@ public class ProgramManager {
   
   private String fileName(String input) {
       
-      return "teamProject/src/teamProject/" + input + ".txt";
+      return "src/teamProject/" + input + ".txt";
    }
 
    private void save(String fileName, Object obj) {

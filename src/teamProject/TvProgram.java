@@ -19,6 +19,7 @@ public class TvProgram implements Serializable{
    Tv tv;
    
    List<Program> programs = new ArrayList<Program>();
+   
    public String getTv() {
       return tv.name();
    }
