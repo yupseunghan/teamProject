@@ -75,7 +75,7 @@ public class AddProPanel extends JFrame {
         setVisible(true);
     }
     
-    public AddProPanel(MainFrame mainFrame, List<Company>comList, List<User> userList, List<String> companys) {  
+    public AddProPanel(MainFrame mainFrame, List<TvProgram>comList, List<String> companys) {  
         setTitle("프로그램 추가 수정 삭제");
         setSize(400, 300);
         setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);

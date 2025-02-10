@@ -29,24 +29,24 @@ public class LoginPanel extends JFrame {
 
         idField = new JTextField();
         loginButton = new JButton("로그인");
-        signUpButton = new JButton("회원가입");
+        //signUpButton = new JButton("회원가입");
         backButton = new JButton("뒤로 가기");
 
         panel.add(new JLabel("아이디 입력 :"));
         panel.add(idField);
         panel.add(loginButton);
-        panel.add(signUpButton);
+        //panel.add(signUpButton);
         panel.add(backButton);
 
         add(panel);
 
         loginButton.addActionListener(e -> JOptionPane.showMessageDialog(this, "로그인"));
-        signUpButton.addActionListener(e -> JOptionPane.showMessageDialog(this, "회원가입"));
+        //signUpButton.addActionListener(e -> JOptionPane.showMessageDialog(this, "회원가입"));
         backButton.addActionListener(e->dispose());
         setVisible(true);
     }
 
-	public LoginPanel(MainFrame mainFrame, List<Company>comList, List<User> userList, List<String> companys) {
+	public LoginPanel(MainFrame mainFrame, List<TvProgram>comList, List<String> companys) {
 	       setTitle("로그인");
 	        setSize(300, 200);
 	        setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
@@ -56,13 +56,13 @@ public class LoginPanel extends JFrame {
 
 	        idField = new JTextField();
 	        loginButton = new JButton("로그인");
-	        signUpButton = new JButton("회원가입");
+	        //signUpButton = new JButton("회원가입");
 	        backButton = new JButton("뒤로 가기");
 
 	        panel.add(new JLabel("아이디 입력 :"));
 	        panel.add(idField);
 	        panel.add(loginButton);
-	        panel.add(signUpButton);
+	       // panel.add(signUpButton);
 	        panel.add(backButton);
 
 	        add(panel);
@@ -73,23 +73,24 @@ public class LoginPanel extends JFrame {
 	                JOptionPane.showMessageDialog(this, "아이디를 입력하세요.");
 	                return;
 	            }
-
+	            /*
 	           int index = userList.indexOf(new User(id));
 	            if (index>=0) {
-	                JOptionPane.showMessageDialog(this, id + " 로그인");
 	                dispose();
-
+				*/
+	            JOptionPane.showMessageDialog(this, id + " 로그인");
 	                if (id.equals("admin")) {
-	                	new AdminMenu(mainFrame, comList, companys, userList); // 관리자 메뉴
+	                	new AdminMenu(mainFrame, comList, companys); // 관리자 메뉴
 	                } else {
-	                	new UserMenu(mainFrame,comList, companys, userList); // 사용자 메뉴
+	                	new UserMenu(mainFrame,comList, companys); // 사용자 메뉴
 	                }
+	                /*
 	            } else {
 	            	JOptionPane.showMessageDialog(this, "존재하지 않는 아이디.");
-	            }
+	            }*/
 	        });
 
-
+	        /*
 	        signUpButton.addActionListener(e -> {
 	        	String id = idField.getText().trim();
 	        	if (id.isEmpty()) {
@@ -104,7 +105,7 @@ public class LoginPanel extends JFrame {
 	        		JOptionPane.showMessageDialog(this, "중복된 아이디.");
 	        	}
 	        });
-
+		*/
 
 	        backButton.addActionListener(e->dispose());
 	        

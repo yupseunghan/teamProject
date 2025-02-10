@@ -10,7 +10,7 @@ public class ProgramMannager implements ConsoleProgram{
 
 	
 	//private static List<User> userList;				//계정 리스트
-	private static List<Company> comList;		//전체 편성표
+	private static List<TvProgram> list;		//전체 편성표
 	private static List<String> companys;			//방송사 목록
 
 	public void run() {
@@ -19,13 +19,13 @@ public class ProgramMannager implements ConsoleProgram{
 
 
 		//userList = (ArrayList<User>)load(fileName("userList"));				
-		comList = (ArrayList<Company>)load(fileName("comList"));				
+		list = (ArrayList<TvProgram>)load(fileName("TvList"));				
 		companys = (ArrayList<String>)load(fileName("companys"));		
 
 		//불러오기
 		//조회, 수정 가능
 		//userList = (userList == null) ? new ArrayList<>() : userList;
-		comList = (comList == null) ? new ArrayList<>() : comList;
+		list = (list == null) ? new ArrayList<>() : list;
 		companys = (companys == null) ? new ArrayList<>() : companys;
 
 
@@ -37,13 +37,13 @@ public class ProgramMannager implements ConsoleProgram{
 			System.out.println("임의의 유저를 추가했습니다.");
 		}
 		*/
-		
-		if(comList.isEmpty() || comList.size()==0) {
-			Company kbs = new Company("KBS");
-			kbs.getList().add(new TimeTable(1,0,"kbs제목1","내용1"));
-			kbs.getList().add(new TimeTable(3,0,"kbs제목2","내용2"));
-			kbs.getList().add(new TimeTable(3,30,"kbs제목3","내용3"));
-			comList.add(kbs);
+		/*
+		if(list.isEmpty() || list.size()==0) {
+			TvProgram kbs = new TvProgram("KBS");
+			TvProgram("KBS",new Program("1","kbs제목1","내용1")));
+			kbs.getPrograms().add(new Program("3","kbs제목2","내용2"));
+			kbs.getPrograms().add(new Program("4","kbs제목3","내용3"));
+			list.add(kbs);
 			companys.add("KBS");
 			
 			Company sbs = new Company("SBS");
@@ -59,20 +59,20 @@ public class ProgramMannager implements ConsoleProgram{
 			
 			System.out.println("빈 시간표를 임의로 작성했습니다.");
 		}
-		
+		*/
 
 		
 		
 		//아이디 입력
-		List<User> userList = new ArrayList<User>(); 
 		
-		MainFrame main = new MainFrame(comList,userList, companys);
+		
+		MainFrame main = new MainFrame(list, companys);
 		
 		
 		
 		
 		//save(fileName("userList"),userList);				
-		save(fileName("comList"),comList);				
+		save(fileName("TvList"),list);				
 		save(fileName("companys"),companys);
 		
 		
@@ -81,7 +81,7 @@ public class ProgramMannager implements ConsoleProgram{
 			e.printStackTrace();
 			System.out.println("가동 오류 발생");
 			//save(fileName("userList"),userList);				
-			save(fileName("comList"),comList);				
+			save(fileName("TvList"),list);				
 			save(fileName("companys"),companys);	
 			
 		}
