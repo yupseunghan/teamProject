@@ -9,10 +9,10 @@ public class AdminMenu extends JFrame {
 	 * 
 	 */
 	private static final long serialVersionUID = 1L;
-	private JButton scheduleButton, manageUsersButton, logoutButton;
+	private JButton scheduleButton, logoutButton;
 	private JButton viewScheduleButton;
 
-    public AdminMenu(MainFrame mainFrame, List<TvProgram> comList, List<String> companys) {
+    public AdminMenu(MainFrame mainFrame, List<TvProgram> comList) {
 	
         setTitle("admin 메뉴");
         setSize(400, 300);
@@ -33,7 +33,7 @@ public class AdminMenu extends JFrame {
 
         add(panel);
 
-        scheduleButton.addActionListener(e -> new AddProPanel(this));
+        scheduleButton.addActionListener(e -> new AddProPanel(this,comList));
         //manageUsersButton.addActionListener(e -> JOptionPane.showMessageDialog(this, "user 관리"));
         viewScheduleButton.addActionListener(e -> new SchedulePanel(this,comList));
         logoutButton.addActionListener(e -> {

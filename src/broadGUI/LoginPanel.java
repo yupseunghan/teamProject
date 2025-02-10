@@ -46,7 +46,7 @@ public class LoginPanel extends JFrame {
         setVisible(true);
     }
 
-	public LoginPanel(MainFrame mainFrame, List<TvProgram>comList, List<String> companys) {
+	public LoginPanel(MainFrame mainFrame, List<TvProgram>comList) {
 	       setTitle("로그인");
 	        setSize(300, 200);
 	        setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
@@ -80,9 +80,9 @@ public class LoginPanel extends JFrame {
 				*/
 	            JOptionPane.showMessageDialog(this, id + " 로그인");
 	                if (id.equals("admin")) {
-	                	new AdminMenu(mainFrame, comList, companys); // 관리자 메뉴
+	                	new AdminMenu(mainFrame, comList); // 관리자 메뉴
 	                } else {
-	                	new UserMenu(mainFrame,comList, companys); // 사용자 메뉴
+	                	new UserMenu(mainFrame,comList); // 사용자 메뉴
 	                }
 	                /*
 	            } else {

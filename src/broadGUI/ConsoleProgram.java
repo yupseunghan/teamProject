@@ -7,7 +7,6 @@ import java.io.ObjectOutputStream;
 
 public interface ConsoleProgram {
 
-	void run();
 
 	default void printMenu() {}	//추상메소드가 아닌 디폴트로 만들면 구현 안해도됨
 
@@ -50,7 +49,7 @@ public interface ConsoleProgram {
 	
   	default String fileName(String input) {
     	  
-    	  return "src/broadcast_sample/swingGUI/" + input +".txt";
+    	  return "src/broadGUI/" + input +".txt";
       }
 	
 }

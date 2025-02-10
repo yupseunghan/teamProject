@@ -39,7 +39,7 @@ public class MainFrame extends JFrame {
 
         // 버튼 이벤트 리스너
         loginButton.addActionListener(e -> {
-        	new LoginPanel(this);
+        	new LoginPanel(this, null, null, null);
         });
         guestButton.addActionListener(e -> {
         	//new SchedulePanel(this);

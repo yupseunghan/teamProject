@@ -6,13 +6,27 @@ import java.util.List;
 
 
 
+
+
 public class ProgramMannager implements ConsoleProgram{
 
 	
 	//private static List<User> userList;				//계정 리스트
 	private static List<TvProgram> list;		//전체 편성표
-	private static List<String> companys;			//방송사 목록
-
+	
+	public void programInsert(String company, String programName, String time, String explain) {
+        Program p = new Program(programName,time,explain);
+        if(p==null)
+           return;
+        TvProgram tp=new TvProgram(Tv.valueOf(company), p);
+        int index = list.indexOf(tp);
+        if(index < 0) {
+           list.add(tp);
+           return;
+        }
+        list.get(index).insert(p);
+     }
+	
 	public void run() {
 		
 		try {
@@ -20,13 +34,12 @@ public class ProgramMannager implements ConsoleProgram{
 
 		//userList = (ArrayList<User>)load(fileName("userList"));				
 		list = (ArrayList<TvProgram>)load(fileName("TvList"));				
-		companys = (ArrayList<String>)load(fileName("companys"));		
 
 		//불러오기
 		//조회, 수정 가능
 		//userList = (userList == null) ? new ArrayList<>() : userList;
 		list = (list == null) ? new ArrayList<>() : list;
-		companys = (companys == null) ? new ArrayList<>() : companys;
+
 
 
 		//불러오기 실패
@@ -66,23 +79,20 @@ public class ProgramMannager implements ConsoleProgram{
 		//아이디 입력
 		
 		
-		MainFrame main = new MainFrame(list, companys);
+		MainFrame main = new MainFrame(list);
 		
 		
 		
 		
 		//save(fileName("userList"),userList);				
-		save(fileName("TvList"),list);				
-		save(fileName("companys"),companys);
+						
 		
 		
 		}catch (Exception e) {
 			// TODO: handle exception
 			e.printStackTrace();
 			System.out.println("가동 오류 발생");
-			//save(fileName("userList"),userList);				
-			save(fileName("TvList"),list);				
-			save(fileName("companys"),companys);	
+			//save(fileName("userList"),userList);							
 			
 		}
 		

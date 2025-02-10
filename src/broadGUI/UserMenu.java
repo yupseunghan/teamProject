@@ -16,7 +16,7 @@ public class UserMenu extends JFrame {
 	private JButton viewScheduleButton, logoutButton;
 
 	
-	public UserMenu(MainFrame mainFrame, List<TvProgram> comList, List<String> companys) {
+	public UserMenu(MainFrame mainFrame, List<TvProgram> comList) {
 		  setTitle("user 메뉴");
 	        setSize(400, 300);
 	        setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);

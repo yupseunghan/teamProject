@@ -78,6 +78,4 @@ public class TvProgram implements Serializable{
       return tv == other.tv;
    }
 }
-enum Tv {
-	 SBS, KBS, MBC;
-	}
+
