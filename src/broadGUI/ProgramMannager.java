@@ -14,17 +14,51 @@ public class ProgramMannager implements ConsoleProgram{
 	//private static List<User> userList;				//계정 리스트
 	private static List<TvProgram> list;		//전체 편성표
 	
-	public void programInsert(String company, String programName, String time, String explain) {
-        Program p = new Program(programName,time,explain);
-        if(p==null)
-           return;
-        TvProgram tp=new TvProgram(Tv.valueOf(company), p);
-        int index = list.indexOf(tp);
-        if(index < 0) {
-           list.add(tp);
-           return;
+	public boolean programUpdate(String company, String programName, String time, String explain) {
+	      	try {
+	      		boolean res=false;
+		        if(list.isEmpty()) {
+		            return res;
+		         }
+		        
+		         TvProgram tp=null;
+		         for(TvProgram tmp:list) {
+		            if(tmp.getTv().equals(company)) {
+		               tp=tmp;
+		               break;
+		            }
+		         }
+		         
+		         if(!list.contains(tp)) {
+		            return res;
+		         }
+		         
+		         Program p = new Program(time,programName,explain);
+		         System.out.println(p);
+		         res=tp.update(p);
+		         return res;
+	      	}catch(Exception e) {
+	      		return true;
+	      	}
+	         
+	      }
+
+	public boolean programInsert(String company, String programName, String time, String explain) {
+        try {
+        	Program p = new Program(time,programName,explain);
+            if(p==null)
+               return false;
+            TvProgram tp=new TvProgram(Tv.valueOf(company), p);
+            int index = list.indexOf(tp);
+            if(index < 0) {
+               list.add(tp);
+               return false;
+            }
+            list.get(index).insert(p);
+            return true;
+        }catch(Exception e) {
+        	return false;
         }
-        list.get(index).insert(p);
      }
 	
 	public void run() {

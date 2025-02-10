@@ -58,17 +58,25 @@ public class AddProPanel extends JFrame {
         add(panel);
 
         addButton.addActionListener(e -> {
+        	boolean res =false;
         	String company = companyNameField.getText();
         	String programName = programNameField.getText();
         	String time = timeField.getText();
         	String explain = explainField.getText();
-        	p.programInsert(company,programName,time,explain);
-        JOptionPane.showMessageDialog(this, "프로그램 추가");
+        	res=p.programInsert(company,programName,time,explain);
+        	if(res)JOptionPane.showMessageDialog(this, "프로그램 추가");
+        	else JOptionPane.showMessageDialog(this, "프로그램 추가 실패");
         	
         });
         updateButton.addActionListener(e -> {
-        JOptionPane.showMessageDialog(this, "프로그램 수정");
-        //생각중
+        	boolean res =false;
+        	String company = companyNameField.getText();
+        	String programName = programNameField.getText();
+        	String time = timeField.getText();
+        	String explain = explainField.getText();
+        	res=p.programUpdate(company,programName,time,explain);
+        	if(res)JOptionPane.showMessageDialog(this, "프로그램 수정");
+        	else JOptionPane.showMessageDialog(this, "프로그램 수정 실패");
         });
         deleteButton.addActionListener(e -> {
         	

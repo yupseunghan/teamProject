@@ -29,14 +29,6 @@ public class ProgramMannager implements ConsoleProgram{
 		companys = (companys == null) ? new ArrayList<>() : companys;
 
 
-		//불러오기 실패
-		/*
-		if(userList.isEmpty() || userList.size()==0) {
-			userList.add(new User("admin", true));
-			userList.add(new User("smpl", false));
-			System.out.println("임의의 유저를 추가했습니다.");
-		}
-		*/
 		
 		if(comList.isEmpty() || comList.size()==0) {
 			Company kbs = new Company("KBS");
