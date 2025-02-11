@@ -126,11 +126,42 @@ public class ProgramMannager implements ConsoleProgram{
 			// TODO: handle exception
 			e.printStackTrace();
 			System.out.println("가동 오류 발생");
+			 save(fileName("TvList"),list);	
 			//save(fileName("userList"),userList);							
 			
 		}
 		
 	}
-	
 
+	public boolean programDelete(String company, String time) {
+    	
+		try {
+		if(list.isEmpty()) {
+    		System.out.println("리스트가 비어있어요..");
+    		return false;
+    	}
+
+    	TvProgram tp=null;
+
+    	for(TvProgram tmp:list) {
+    		if(tmp.getTv().equals(company)) {
+    			tp=tmp;
+    			break;
+    		}
+    	}
+
+    	if(!list.contains(tp)) {
+    		System.out.println(company + "채널이 비어있습니다");
+    		return false;
+    	}
+
+    	return tp.delete(time);
+	
+	
+	}catch (Exception e) {
+		e.printStackTrace();
+		return false;
+	}
+	
+	}
 }

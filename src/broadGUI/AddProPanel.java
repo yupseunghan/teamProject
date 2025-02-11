@@ -10,6 +10,7 @@ import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JTextField;
 
+
 public class AddProPanel extends JFrame {
     /**
 	 * 
@@ -79,15 +80,22 @@ public class AddProPanel extends JFrame {
         	else JOptionPane.showMessageDialog(this, "프로그램 수정 실패");
         });
         deleteButton.addActionListener(e -> {
-        	
-        JOptionPane.showMessageDialog(this, "프로그램 삭제");
-        //생각중
-        });
+        	boolean res =false;
+        	String company = companyNameField.getText();
+        	String programName = programNameField.getText();
+        	String time = timeField.getText();
+        	String explain = explainField.getText();
+
+        	res=p.programDelete(company, time);
+        	if(!res)JOptionPane.showMessageDialog(this, "프로그램 삭제 실패");
+        	else JOptionPane.showMessageDialog(this, "프로그램 삭제");
         
+    });
+
         backButton.addActionListener(e -> dispose());
 
         setVisible(true);
-    }
+}
 
 
 }

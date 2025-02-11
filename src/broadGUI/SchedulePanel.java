@@ -18,6 +18,7 @@ public class SchedulePanel extends JFrame {
 
         this.tvPrograms = (tvList != null) ? tvList : List.of(); // Null 방지
 
+        
         initializeUI();
         display();
 
