@@ -64,7 +64,8 @@ public class AddProPanel extends JFrame {
         	String programName = programNameField.getText();
         	String time = timeField.getText();
         	String explain = explainField.getText();
-        	res=p.programInsert(company,programName,time,explain);
+        	if(!certain("추가하시겠습니까?")) res = false;
+        	else res=p.programInsert(company,programName,time,explain);
         	if(res)JOptionPane.showMessageDialog(this, "프로그램 추가");
         	else JOptionPane.showMessageDialog(this, "프로그램 추가 실패");
         	
@@ -75,7 +76,8 @@ public class AddProPanel extends JFrame {
         	String programName = programNameField.getText();
         	String time = timeField.getText();
         	String explain = explainField.getText();
-        	res=p.programUpdate(company,programName,time,explain);
+        	if(!certain("수정하시겠습니까?")) res = false;
+        	else res=p.programUpdate(company,programName,time,explain);
         	if(res)JOptionPane.showMessageDialog(this, "프로그램 수정");
         	else JOptionPane.showMessageDialog(this, "프로그램 수정 실패");
         });
@@ -86,7 +88,8 @@ public class AddProPanel extends JFrame {
         	String time = timeField.getText();
         	String explain = explainField.getText();
 
-        	res=p.programDelete(company, time);
+        	if(!certain("삭제하시겠습니까?")) res = false;
+        	else res=p.programDelete(company, time);
         	if(!res)JOptionPane.showMessageDialog(this, "프로그램 삭제 실패");
         	else JOptionPane.showMessageDialog(this, "프로그램 삭제");
         
@@ -96,6 +99,14 @@ public class AddProPanel extends JFrame {
 
         setVisible(true);
 }
+    
+	public boolean certain(String ment) {
+        int result = JOptionPane.showConfirmDialog(this, ment , "확인", JOptionPane.YES_NO_OPTION);
+        if (result == JOptionPane.YES_OPTION) {
+            return true;
+        }
+        return false;
+    }
 
 
 }
