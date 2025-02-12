@@ -73,6 +73,17 @@ public class TvProgram implements Serializable{
       programs.add(p);
    }
 
+	public String printOut(String time) {
+		
+		String tmp = "";
+		for(int i = 0; i < programs.size(); i++) {
+			if(programs.get(i).getProgramTime().equals(time)) {
+				tmp += ("[" + this.programs + "]" + this.programs.get(i).toString());
+			}
+		}
+		return tmp;
+	}
+   
    @Override
    public boolean equals(Object obj) {
       if (this == obj)

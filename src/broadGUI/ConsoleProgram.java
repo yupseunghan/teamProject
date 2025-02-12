@@ -2,14 +2,17 @@ package broadGUI;
 
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
+import java.io.FileWriter;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
+import java.text.DecimalFormat;
+import java.util.List;
+import java.util.Scanner;
 
 public interface ConsoleProgram {
 
 
-	default void printMenu() {}	//추상메소드가 아닌 디폴트로 만들면 구현 안해도됨
-
+	
 	default void runMenu(int menu) {}
 
 	default Object load(String fileName) {
@@ -52,5 +55,38 @@ public interface ConsoleProgram {
     	  return "src/broadGUI/" + input +".txt";
       }
 	
+  	
+	private static void printSchedule(List<TvProgram> comList) {
+		Scanner scan = new Scanner(System.in);
+		System.out.println("편성표 출력");
+		System.out.print("만들 파일의 이름 : ");
+		String str = scan.nextLine();
+
+
+		try(FileWriter fw = new FileWriter("src/broadGUI/" + str +".txt")){
+
+			fw.write("TV 편성표");
+			fw.write("\n");
+			
+			for(int j = 1; j <= 24; j++) {
+				fw.write(new DecimalFormat("00").format(j) + " 시 : ");
+				String writer = ""; 
+				for(int i = 0; i < comList.size(); i++) {
+					writer += comList.get(i).printOut(Integer.toString(j));
+				}
+				fw.write(writer);
+				fw.write("\n");
+			}
+			fw.flush();
+
+
+		}catch (Exception e) {
+			System.out.println("출력 오류");
+		}
+
+		System.out.println("src/broadGUI/" + str +".txt" + " : 파일 생성에 성공하였습니다.");
+
+	}
+  	
 }
 

@@ -2,7 +2,10 @@ package broadGUI;
 
 import java.awt.FlowLayout;
 import java.awt.GridLayout;
+import java.io.FileWriter;
+import java.text.DecimalFormat;
 import java.util.List;
+import java.util.Scanner;
 
 import javax.swing.JButton;
 import javax.swing.JFrame;
@@ -64,6 +67,8 @@ public class FrameMain extends JFrame implements ConsoleProgram{
             System.exit(0);
         }
     }
+	
+
 
 
 
