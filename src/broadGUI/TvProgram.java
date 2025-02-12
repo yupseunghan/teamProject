@@ -1,4 +1,4 @@
-package teamProject;
+package broadGUI;
 
 import java.io.Serializable;
 import java.util.ArrayList;
@@ -31,6 +31,13 @@ public class TvProgram implements Serializable{
          }
       }
    }
+   
+   public List serTv(String menu) {
+	      if(tv.equals(Tv.valueOf(menu))) {
+	        return this.programs;
+	      }
+		return null;
+	   }
    
    public TvProgram(Tv valueOf, Program p) {
       this.tv = valueOf;
@@ -66,6 +73,17 @@ public class TvProgram implements Serializable{
       programs.add(p);
    }
 
+	public String printOut(String time) {
+		
+		String tmp = "";
+		for(int i = 0; i < programs.size(); i++) {
+			if(programs.get(i).getProgramTime().equals(time)) {
+				tmp += ("[" + this.programs + "]" + this.programs.get(i).toString());
+			}
+		}
+		return tmp;
+	}
+   
    @Override
    public boolean equals(Object obj) {
       if (this == obj)
@@ -78,3 +96,4 @@ public class TvProgram implements Serializable{
       return tv == other.tv;
    }
 }
+
