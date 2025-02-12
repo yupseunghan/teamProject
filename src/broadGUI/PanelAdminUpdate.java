@@ -71,7 +71,7 @@ public class PanelAdminUpdate extends JFrame {
     	String programName = programNameField.getText();
     	String time = timeField.getText();
     	String explain = explainField.getText();
-    	if(!certain("수정하시겠습니까?")) res = false;
+    	if(!certain(p.programName(company, time) + "수정하시겠습니까?")) res = false;
     	else res=p.programUpdate(company,programName,time,explain);
     	if(res)JOptionPane.showMessageDialog(this, "프로그램 수정");
     	else JOptionPane.showMessageDialog(this, "프로그램 수정 실패");

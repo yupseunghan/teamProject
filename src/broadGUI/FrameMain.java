@@ -59,8 +59,8 @@ public class FrameMain extends JFrame implements ConsoleProgram{
 
 	private void exitProgram(List<TvProgram> comList) {
         int result = JOptionPane.showConfirmDialog(this, "정말 종료하시겠습니까?", "종료 확인", JOptionPane.YES_NO_OPTION);
-        save(fileName("TvList"),comList);	
         if (result == JOptionPane.YES_OPTION) {
+        	save(fileName("TvList"),comList);	
             System.exit(0);
         }
     }

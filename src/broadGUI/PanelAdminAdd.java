@@ -68,7 +68,7 @@ public class PanelAdminAdd extends JFrame{
     	String programName = programNameField.getText();
     	String time = timeField.getText();
     	String explain = explainField.getText();
-    	if(!certain("추가하시겠습니까?")) res = false;
+    	if(!certain(p.programName(company, time) + "추가하시겠습니까?")) res = false;
     	else res=p.programInsert(company,programName,time,explain);
     	if(res)JOptionPane.showMessageDialog(this, "프로그램 추가");
     	else JOptionPane.showMessageDialog(this, "프로그램 추가 실패");
