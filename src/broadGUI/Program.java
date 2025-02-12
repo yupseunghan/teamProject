@@ -18,6 +18,9 @@ private String programTime,programName,programExpaln;
 
    @Override
    public String toString() {
+	  if(programExpaln.equals(" ")) {
+		  return programTime+"시";
+	  }
       return programTime+"시 "+programName+" | 장르: "+programExpaln;
    }
 

@@ -59,12 +59,12 @@ public class PanelAdminAdd extends JFrame{
 
       setVisible(true);
     }
-
+ 
 	private void addProgram(PanelAdminAdd addProgram, List<TvProgram> comList) {
 		
 		
 		boolean res =false;
-    	String company = companyNameField.getText();
+    	String company = companyNameField.getText().trim().toUpperCase();
     	String programName = programNameField.getText();
     	String time = timeField.getText();
     	String explain = explainField.getText();

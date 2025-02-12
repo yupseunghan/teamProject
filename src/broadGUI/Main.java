@@ -6,7 +6,5 @@ public class Main {
 		// TODO Auto-generated method stub
 		ProgramMannager pm = new ProgramMannager();		
 		pm.run();
-
 	}
-
 }

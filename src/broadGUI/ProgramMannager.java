@@ -2,8 +2,7 @@ package broadGUI;
 
 import java.util.ArrayList;
 import java.util.List;
-
-import javax.swing.JOptionPane;
+import java.util.regex.Pattern;
 
 
 
@@ -35,7 +34,7 @@ public class ProgramMannager implements ConsoleProgram{
 		         if(!list.contains(tp)) {
 		            return res;
 		         }
-		         
+		         if(!isValidNumber(time)) return false;
 		         Program p = new Program(time,programName,explain);
 		         System.out.println(p);
 		         res=tp.update(p);
@@ -45,20 +44,27 @@ public class ProgramMannager implements ConsoleProgram{
 	      	}
 	         
 	      }
+	public boolean isValidNumber(String str) {
+        String pattern = "\\b(1[0-9]|2[0-4]|[1-9]|0[1-9])\\b";
+        return Pattern.matches(pattern, str);
+    }
 
 	public boolean programInsert(String company, String programName, String time, String explain) {
         try {
+        	if(!isValidNumber(time)){
+        		return false;
+        	}
         	Program p = new Program(time,programName,explain);
-            if(p==null)
-               return false;
+            if(p==null )return false;
             TvProgram tp=new TvProgram(Tv.valueOf(company), p);
             int index = list.indexOf(tp);
             if(index < 0) {
                list.add(tp);
                return false;
             }
-            list.get(index).insert(p);
-            return true;
+            if(list.get(index).insert(p))
+            	return true;
+            else return false;
         }catch(Exception e) {
         	return false;
         }
@@ -157,7 +163,7 @@ public class ProgramMannager implements ConsoleProgram{
     		System.out.println(company + "채널이 비어있습니다");
     		return false;
     	}
-
+    	if(!isValidNumber(time)) return false;
     	return tp.delete(time);
 	
 	

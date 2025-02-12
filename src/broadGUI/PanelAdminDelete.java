@@ -72,7 +72,7 @@ public class PanelAdminDelete extends JFrame {
     
 	private void delProgram(PanelAdminDelete delProgram, List<TvProgram> comList) {
 		boolean res =false;
-    	String company = companyNameField.getText();
+    	String company = companyNameField.getText().trim().toUpperCase();
     	
     	String time = timeField.getText();
     	

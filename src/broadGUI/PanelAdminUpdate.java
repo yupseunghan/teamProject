@@ -67,7 +67,7 @@ public class PanelAdminUpdate extends JFrame {
     
     private void updProgram(PanelAdminUpdate updProgram, List<TvProgram> comList) {
 		boolean res =false;
-    	String company = companyNameField.getText();
+    	String company = companyNameField.getText().trim().toUpperCase();
     	String programName = programNameField.getText();
     	String time = timeField.getText();
     	String explain = explainField.getText();

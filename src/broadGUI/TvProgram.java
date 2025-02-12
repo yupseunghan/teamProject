@@ -65,12 +65,13 @@ public class TvProgram implements Serializable{
       return res;
    }
 
-   public void insert(Program p) {
+   public boolean insert(Program p) {
       if(programs.contains(p)) {
          System.out.println("시간대 중복");
-         return;
+         return false;
       }
       programs.add(p);
+      return true;
    }
 
 	public String printOut(String time) {
