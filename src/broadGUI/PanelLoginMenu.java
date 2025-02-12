@@ -10,7 +10,7 @@ import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JTextField;
 
-public class LoginPanel extends JFrame {
+public class PanelLoginMenu extends JFrame {
     /**
 	 * 
 	 */
@@ -19,7 +19,7 @@ public class LoginPanel extends JFrame {
 	private JTextField idField;
     private JButton loginButton, signUpButton, backButton;
 
-    public LoginPanel(JFrame frame) {		//기본생성자(테스트용)
+    public PanelLoginMenu(JFrame frame) {		//기본생성자(테스트용)
         setTitle("로그인");
         setSize(300, 200);
         setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
@@ -46,7 +46,7 @@ public class LoginPanel extends JFrame {
         setVisible(true);
     }
 
-	public LoginPanel(MainFrame mainFrame, List<TvProgram>comList) {
+	public PanelLoginMenu(FrameMain mainFrame, List<TvProgram>comList) {
 	       setTitle("로그인");
 	        setSize(300, 200);
 	        setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
@@ -80,9 +80,9 @@ public class LoginPanel extends JFrame {
 				*/
 	            JOptionPane.showMessageDialog(this, id + " 로그인");
 	                if (id.equals("admin")) {
-	                	new AdminMenu(mainFrame, comList); // 관리자 메뉴
+	                	new PanelAdminMenu(mainFrame, comList); // 관리자 메뉴
 	                } else {
-	                	new UserMenu(mainFrame,comList); // 사용자 메뉴
+	                	new PanelUserMenu(mainFrame,comList); // 사용자 메뉴
 	                }
 	                /*
 	            } else {

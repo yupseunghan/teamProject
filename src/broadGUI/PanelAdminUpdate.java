@@ -9,7 +9,7 @@ import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JTextField;
 
-public class UpdProgram extends JFrame {
+public class PanelAdminUpdate extends JFrame {
 	private static final long serialVersionUID = 1L;
 	private JTextField  companyNameField, programNameField, timeField, explainField;
     private JButton addButton, updateButton, deleteButton, backButton;
@@ -22,7 +22,7 @@ public class UpdProgram extends JFrame {
     
     
     
-    public UpdProgram(JFrame frame, List<TvProgram>comList) {  
+    public PanelAdminUpdate(JFrame frame, List<TvProgram>comList) {  
 	setTitle("프로그램 수정");
     setSize(400, 300);
     setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
@@ -65,7 +65,7 @@ public class UpdProgram extends JFrame {
     
     }
     
-    private void updProgram(UpdProgram updProgram, List<TvProgram> comList) {
+    private void updProgram(PanelAdminUpdate updProgram, List<TvProgram> comList) {
 		boolean res =false;
     	String company = companyNameField.getText();
     	String programName = programNameField.getText();
@@ -75,7 +75,7 @@ public class UpdProgram extends JFrame {
     	else res=p.programUpdate(company,programName,time,explain);
     	if(res)JOptionPane.showMessageDialog(this, "프로그램 수정");
     	else JOptionPane.showMessageDialog(this, "프로그램 수정 실패");
-		
+    	p.sort();
 	}
 	public boolean certain(String ment) {
         int result = JOptionPane.showConfirmDialog(this, ment , "확인", JOptionPane.YES_NO_OPTION);

@@ -11,7 +11,7 @@ import javax.swing.JPanel;
 import javax.swing.JTextField;
 
 
-public class DelProgram extends JFrame {
+public class PanelAdminManager extends JFrame {
     /**
 	 * 
 	 */
@@ -27,62 +27,49 @@ public class DelProgram extends JFrame {
     
     
     
-    public DelProgram(JFrame mainFrame, List<TvProgram>comList) {  
-        setTitle("프로그램 삭제");
+    public PanelAdminManager(JFrame mainFrame, List<TvProgram>comList) {  
+        setTitle("프로그램 추가 수정 삭제");
         setSize(400, 300);
         setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
 
         JPanel panel = new JPanel();
         panel.setLayout(new GridLayout(7, 2));
 
-        panel.add(new JLabel("방송사 :"));
-        companyNameField = new JTextField();
-        panel.add(companyNameField);
-        
-        
 
-        panel.add(new JLabel("방송 시간 (HH) :"));
-        timeField = new JTextField();
-        panel.add(timeField);
-         
-
-
-
+        addButton = new JButton("추가");
+        updateButton = new JButton("수정");
         deleteButton = new JButton("삭제");
         backButton = new JButton("뒤로 가기");
         
         
 
-
+        panel.add(addButton);
+        panel.add(updateButton);
         panel.add(deleteButton);
         panel.add(backButton);
 
         add(panel);
 
-
+        addButton.addActionListener(e -> {
+        	new PanelAdminAdd(this,comList);
+        });
+        updateButton.addActionListener(e -> {
+        	new PanelAdminUpdate(this,comList);
+        });
         deleteButton.addActionListener(e -> {
-        	delProgram(this,comList);
+        	new PanelAdminDelete(this,comList);
         
     });
 
         backButton.addActionListener(e -> dispose());
 
         setVisible(true);
-    }
+}
     
-	private void delProgram(DelProgram delProgram, List<TvProgram> comList) {
-		boolean res =false;
-    	String company = companyNameField.getText();
-    	
-    	String time = timeField.getText();
-    	
+  
 
-    	if(!certain(p.programName(company, time) + "삭제하시겠습니까?")) res = false;
-    	else res=p.programDelete(company, time);
-    	if(!res)JOptionPane.showMessageDialog(this, "프로그램 삭제 실패");
-    	else JOptionPane.showMessageDialog(this, "프로그램 삭제");
-		
-	}
+
+
 	public boolean certain(String ment) {
         int result = JOptionPane.showConfirmDialog(this, ment , "확인", JOptionPane.YES_NO_OPTION);
         if (result == JOptionPane.YES_OPTION) {
@@ -90,6 +77,6 @@ public class DelProgram extends JFrame {
         }
         return false;
     }
+
+
 }
-    
-    

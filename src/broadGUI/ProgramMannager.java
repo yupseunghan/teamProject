@@ -10,6 +10,7 @@ import javax.swing.JOptionPane;
 
 
 
+
 public class ProgramMannager implements ConsoleProgram{
 
 	
@@ -115,7 +116,7 @@ public class ProgramMannager implements ConsoleProgram{
 		//아이디 입력
 		
 		
-		MainFrame main = new MainFrame(list);
+		FrameMain main = new FrameMain(list);
 		
 		
 		
@@ -200,5 +201,18 @@ public class ProgramMannager implements ConsoleProgram{
 	
 	}
 
+	
+	 public void sort() {
+	     try {
+	      list.sort((tp1, tp2) -> {
+	           return Integer.compare(Integer.parseInt(tp1.getPrograms().get(0).getProgramTime()), Integer.parseInt(tp2.getPrograms().get(0).getProgramTime()));
+	       });
+	       for (TvProgram tp : list) {
+	           tp.getPrograms().sort((p1, p2) -> Integer.compare(Integer.parseInt(p1.getProgramTime()), Integer.parseInt(p2.getProgramTime())));
+	       }
+	     }catch(Exception e) {
+	        e.printStackTrace();
+	     }
+	   }
 	
 }

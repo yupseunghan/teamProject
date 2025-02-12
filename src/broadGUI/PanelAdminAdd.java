@@ -10,14 +10,14 @@ import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JTextField;
 
-public class AddProgram extends JFrame{
+public class PanelAdminAdd extends JFrame{
 	
 	private static final long serialVersionUID = 1L;
 	private JTextField  companyNameField, programNameField, timeField, explainField;
     private JButton addButton, updateButton, deleteButton, backButton;
     ProgramMannager p = new ProgramMannager();
     
-    public AddProgram(JFrame frame, List<TvProgram>comList) { 
+    public PanelAdminAdd(JFrame frame, List<TvProgram>comList) { 
 	
 	  setTitle("프로그램 추가");
       setSize(400, 300);
@@ -60,7 +60,7 @@ public class AddProgram extends JFrame{
       setVisible(true);
     }
 
-	private void addProgram(AddProgram addProgram, List<TvProgram> comList) {
+	private void addProgram(PanelAdminAdd addProgram, List<TvProgram> comList) {
 		
 		
 		boolean res =false;
@@ -73,6 +73,7 @@ public class AddProgram extends JFrame{
     	if(res)JOptionPane.showMessageDialog(this, "프로그램 추가");
     	else JOptionPane.showMessageDialog(this, "프로그램 추가 실패");
     	
+    	p.sort();
 		
 	}
 	

@@ -4,7 +4,7 @@ import javax.swing.*;
 import java.awt.*;
 import java.util.List;
 
-public class AdminMenu extends JFrame {
+public class PanelAdminMenu extends JFrame {
     /**
 	 * 
 	 */
@@ -12,7 +12,7 @@ public class AdminMenu extends JFrame {
 	private JButton scheduleButton, logoutButton;
 	private JButton viewScheduleButton;
 
-    public AdminMenu(MainFrame mainFrame, List<TvProgram> comList) {
+    public PanelAdminMenu(FrameMain mainFrame, List<TvProgram> comList) {
 	
         setTitle("admin 메뉴");
         setSize(400, 300);
@@ -33,9 +33,9 @@ public class AdminMenu extends JFrame {
 
         add(panel);
 
-        scheduleButton.addActionListener(e -> new AddProPanel(this,comList));
+        scheduleButton.addActionListener(e -> new PanelAdminManager(this,comList));
         //manageUsersButton.addActionListener(e -> JOptionPane.showMessageDialog(this, "user 관리"));
-        viewScheduleButton.addActionListener(e -> new SchedulePanel(this,comList));
+        viewScheduleButton.addActionListener(e -> new PanelSchedule(this,comList));
         logoutButton.addActionListener(e -> {
             JOptionPane.showMessageDialog(this, "로그아웃되었습니다.");
             dispose();

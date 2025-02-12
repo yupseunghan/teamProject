@@ -8,7 +8,7 @@ import javax.swing.JFrame;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 
-public class UserMenu extends JFrame {
+public class PanelUserMenu extends JFrame {
     /**
 	 * 
 	 */
@@ -16,7 +16,7 @@ public class UserMenu extends JFrame {
 	private JButton viewScheduleButton, logoutButton;
 
 	
-	public UserMenu(MainFrame mainFrame, List<TvProgram> comList) {
+	public PanelUserMenu(FrameMain mainFrame, List<TvProgram> comList) {
 		  setTitle("user 메뉴");
 	        setSize(400, 300);
 	        setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
@@ -35,7 +35,7 @@ public class UserMenu extends JFrame {
 	        add(panel);
 
 	        
-	        viewScheduleButton.addActionListener(e -> new SchedulePanel(this,comList));
+	        viewScheduleButton.addActionListener(e -> new PanelSchedule(this,comList));
 	        logoutButton.addActionListener(e -> {
 	            JOptionPane.showMessageDialog(this, "로그아웃되었습니다.");
 	            dispose();

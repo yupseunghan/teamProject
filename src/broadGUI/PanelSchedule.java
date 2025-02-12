@@ -4,13 +4,13 @@ import javax.swing.*;
 import java.awt.*;
 import java.util.List;
 
-public class SchedulePanel extends JFrame {
+public class PanelSchedule extends JFrame {
     private JComboBox<String> tvBox;
     private DefaultListModel<String> scheduleListModel;
     private JList<String> scheduleList;
     private List<TvProgram> tvPrograms;
 
-    public SchedulePanel(JFrame frame, List<TvProgram> tvList) {
+    public PanelSchedule(JFrame frame, List<TvProgram> tvList) {
         setTitle("편성표 조회");
         setSize(400, 300);
         setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);

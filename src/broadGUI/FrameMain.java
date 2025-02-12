@@ -9,7 +9,7 @@ import javax.swing.JFrame;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 
-public class MainFrame extends JFrame implements ConsoleProgram{
+public class FrameMain extends JFrame implements ConsoleProgram{
     /**
 	 * 
 	 */
@@ -19,7 +19,7 @@ public class MainFrame extends JFrame implements ConsoleProgram{
     private JButton loginButton, guestButton, exitButton;
 
 
-    public MainFrame(List<TvProgram> comList) {
+    public FrameMain(List<TvProgram> comList) {
         setTitle("방송 편성표 시스템");
         setLayout(new FlowLayout());	
         setSize(400, 300);
@@ -40,11 +40,11 @@ public class MainFrame extends JFrame implements ConsoleProgram{
 
         // 버튼 이벤트 리스너
         loginButton.addActionListener(e -> {
-        	new LoginPanel(this,comList);
+        	new PanelLoginMenu(this,comList);
         });
         guestButton.addActionListener(e -> {
         	
-        	new SchedulePanel(this, comList);
+        	new PanelSchedule(this, comList);
         	//new SchedulePanel(this);			//
         });
         exitButton.addActionListener(e -> {
