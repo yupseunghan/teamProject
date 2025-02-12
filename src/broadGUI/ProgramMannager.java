@@ -168,4 +168,37 @@ public class ProgramMannager implements ConsoleProgram{
 	}
 
 	
+	public String programName(String company, String time) {
+    	
+		try {
+		if(list.isEmpty()) {
+    		System.out.println("리스트가 비어있어요..");
+    		return "프로그램 없음 ";
+    	}
+
+    	TvProgram tp=null;
+
+    	for(TvProgram tmp:list) {
+    		if(tmp.getTv().equals(company)) {
+    			tp=tmp;
+    			break;
+    		}
+    	}
+
+    	if(!list.contains(tp)) {
+    		System.out.println(company + "채널이 비어있습니다 ");
+    		return "프로그램 없음 ";
+    	}
+
+    	return (tp.getPrograms().contains(new Program(time,"",""))) ? tp.getPrograms().get(tp.getPrograms().indexOf(new Program(time,"",""))).getProgramName() + " " : "프로그램 없음 ";
+	
+	
+	}catch (Exception e) {
+		e.printStackTrace();
+		return "프로그램 없음 ";
+	}
+	
+	}
+
+	
 }

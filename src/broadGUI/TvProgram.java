@@ -32,6 +32,13 @@ public class TvProgram implements Serializable{
       }
    }
    
+   public List serTv(String menu) {
+	      if(tv.equals(Tv.valueOf(menu))) {
+	        return this.programs;
+	      }
+		return null;
+	   }
+   
    public TvProgram(Tv valueOf, Program p) {
       this.tv = valueOf;
       this.programs.add(p);
