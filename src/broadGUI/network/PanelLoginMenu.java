@@ -1,6 +1,8 @@
-package broadGUI;
+package broadGUI.network;
 
 import java.awt.GridLayout;
+import java.io.ObjectInputStream;
+import java.io.ObjectOutputStream;
 import java.util.List;
 
 import javax.swing.JButton;
@@ -23,7 +25,8 @@ public class PanelLoginMenu extends JFrame {
         setTitle("로그인");
         setSize(300, 200);
         setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
-
+        setLocationRelativeTo(frame);
+        
         JPanel panel = new JPanel();
         panel.setLayout(new GridLayout(4, 1));
 
@@ -81,10 +84,8 @@ public class PanelLoginMenu extends JFrame {
 	            JOptionPane.showMessageDialog(this, id + " 로그인");
 	                if (id.equals("admin")) {
 	                	new PanelAdminMenu(mainFrame, comList); // 관리자 메뉴
-	                	dispose();
 	                } else {
 	                	new PanelUserMenu(mainFrame,comList); // 사용자 메뉴
-	                	dispose();
 	                }
 	                /*
 	            } else {
@@ -113,4 +114,90 @@ public class PanelLoginMenu extends JFrame {
 	        
 	        setVisible(true);
 	}
+
+	public PanelLoginMenu(FrameMainUser frameMainUser, List<TvProgram> comList) {
+		 setTitle("로그인");
+	        setSize(300, 200);
+	        setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
+
+	        JPanel panel = new JPanel();
+	        panel.setLayout(new GridLayout(4, 1));
+
+	        idField = new JTextField();
+	        loginButton = new JButton("로그인");
+	        backButton = new JButton("뒤로 가기");
+
+	        panel.add(new JLabel("아이디 입력 :"));
+	        panel.add(idField);
+	        panel.add(loginButton);
+	        panel.add(backButton);
+
+	        add(panel);
+
+	        loginButton.addActionListener(e -> {		
+	            String id = idField.getText().trim();
+	            if (id.isEmpty()) {
+	                JOptionPane.showMessageDialog(this, "아이디를 입력하세요.");
+	                return;
+	            }
+	      
+	            JOptionPane.showMessageDialog(this, id + " 로그인");
+	                if (id.equals("admin")) {
+	                	new PanelAdminMenu(this, comList); // 관리자 메뉴
+	                } else {
+	                	new PanelUserMenu(this,comList); // 사용자 메뉴
+	                }
+	            
+	        });
+
+	       
+
+	        backButton.addActionListener(e->dispose());
+	        
+	        setVisible(true);
+	}
+
+	public PanelLoginMenu(FrameMainUser frameMainUser, ObjectOutputStream oos, ObjectInputStream ois) {
+		 setTitle("로그인");
+	        setSize(300, 200);
+	        setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
+
+	        JPanel panel = new JPanel();
+	        panel.setLayout(new GridLayout(4, 1));
+
+	        idField = new JTextField();
+	        loginButton = new JButton("로그인");
+	        backButton = new JButton("뒤로 가기");
+
+	        panel.add(new JLabel("아이디 입력 :"));
+	        panel.add(idField);
+	        panel.add(loginButton);
+	        panel.add(backButton);
+
+	        add(panel);
+
+	        loginButton.addActionListener(e -> {		
+	            String id = idField.getText().trim();
+	            if (id.isEmpty()) {
+	                JOptionPane.showMessageDialog(this, "아이디를 입력하세요.");
+	                return;
+	            }
+	      
+	            JOptionPane.showMessageDialog(this, id + " 로그인");
+	                if (id.equals("admin")) {
+	                	new PanelAdminMenu(this, oos, ois); // 관리자 메뉴
+	                } else {
+	                	new PanelUserMenu(this,oos, ois); // 사용자 메뉴
+	                }
+	            
+	        });
+
+	       
+
+	        backButton.addActionListener(e->dispose());
+	        
+	        setVisible(true);
+	}
+
+
 }
