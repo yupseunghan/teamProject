@@ -122,7 +122,7 @@ public class ProgramMannager implements ConsoleProgram{
 		//아이디 입력
 		
 		
-		FrameMain main = new FrameMain(list);
+		FrameMain main = new FrameMain();
 		
 		
 		
