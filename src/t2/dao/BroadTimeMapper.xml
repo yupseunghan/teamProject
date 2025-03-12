@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="t2.dao.BroadTimeDAO">
+	<resultMap type="t2.model.vo.BroadTime" id="SubjectMap">
+		<id property="num" column="sj_num"/>
+		<result property="grade" column="sj_grade"/>
+		<result property="semester" column="sj_semester"/>
+		<result property="name" column="sj_name"/>
+	</resultMap>
+	<select id="selectBoradTimeList">
+		SELECT 
+    		CP_CH_NAME, PG_NAME, PA_AGE , PR_GR_NAME,BT_DATE,WE_NAME,BT_STARTTIME,BT_ENDTIME,PS_STATE
+		FROM
+    	BROADTIME
+        	JOIN
+    	VIEW ON VW_KEY = BT_VW_KEY
+			JOIN
+		WEEK ON WE_KEY = VW_WE_KEY 
+			JOIN 
+		PROGRAM_STATE ON VW_PS_KEY = PS_KEY
+			JOIN
+		CHANNEL_PRO ON PS_CP_NUM = CP_NUM
+			JOIN
+		PROGRAM ON PG_KEY = CP_PG_KEY
+			JOIN
+		PROGRAM_AGE ON PA_KEY = PG_PA_KEY
+			JOIN
+		PROGRAMGENRE ON PR_KEY = PR_PG_KEY
+	    WHERE CP_CH_NAME= #{ch} AND WE_NAME= #{we};
+	</select>
+</mapper>
