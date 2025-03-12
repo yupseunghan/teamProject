@@ -16,53 +16,27 @@ public class PanelLoginMenu extends JFrame {
 	 */
 	private static final long serialVersionUID = 1L;
 	
-	private JTextField idField;
-    private JButton loginButton, signUpButton, backButton;
+	private JTextField idField, pwField;
+    private JButton loginButton, backButton;
 
-    public PanelLoginMenu(JFrame frame) {		//기본생성자(테스트용)
-        setTitle("로그인");
-        setSize(300, 200);
-        setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
-
-        JPanel panel = new JPanel();
-        panel.setLayout(new GridLayout(4, 1));
-
-        idField = new JTextField();
-        loginButton = new JButton("로그인");
-        //signUpButton = new JButton("회원가입");
-        backButton = new JButton("뒤로 가기");
-
-        panel.add(new JLabel("아이디 입력 :"));
-        panel.add(idField);
-        panel.add(loginButton);
-        //panel.add(signUpButton);
-        panel.add(backButton);
-
-        add(panel);
-
-        loginButton.addActionListener(e -> JOptionPane.showMessageDialog(this, "로그인"));
-        //signUpButton.addActionListener(e -> JOptionPane.showMessageDialog(this, "회원가입"));
-        backButton.addActionListener(e->dispose());
-        setVisible(true);
-    }
-
-	public PanelLoginMenu(FrameMain mainFrame, List<TvProgram>comList) {
+	public PanelLoginMenu(FrameMain mainFrame) {
 	       setTitle("로그인");
 	        setSize(300, 200);
 	        setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
+	        setLocationRelativeTo(mainFrame);
 
 	        JPanel panel = new JPanel();
 	        panel.setLayout(new GridLayout(4, 1));
 
 	        idField = new JTextField();
 	        loginButton = new JButton("로그인");
-	        //signUpButton = new JButton("회원가입");
+	        pwField = new JTextField();
 	        backButton = new JButton("뒤로 가기");
 
 	        panel.add(new JLabel("아이디 입력 :"));
 	        panel.add(idField);
 	        panel.add(loginButton);
-	       // panel.add(signUpButton);
+	        panel.add(pwField);
 	        panel.add(backButton);
 
 	        add(panel);
@@ -80,10 +54,10 @@ public class PanelLoginMenu extends JFrame {
 				*/
 	            JOptionPane.showMessageDialog(this, id + " 로그인");
 	                if (id.equals("admin")) {
-	                	new PanelAdminMenu(mainFrame, comList); // 관리자 메뉴
+	                	//new PanelAdminMenu(mainFrame, comList); // 관리자 메뉴
 	                	dispose();
 	                } else {
-	                	new PanelUserMenu(mainFrame,comList); // 사용자 메뉴
+	                	//new PanelUserMenu(mainFrame,comList); // 사용자 메뉴
 	                	dispose();
 	                }
 	                /*
