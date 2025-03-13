@@ -511,6 +511,7 @@ public class FrameMain extends JFrame {
          switchPanel("userData");
       });
       bookmarkButton.addActionListener(e -> {
+    	  listModel.clear();
          JOptionPane.showMessageDialog(userPanel, "즐겨찾기");
          // new PanelSchedule(frameMain);
          bookMarkList = indexManager.getBookMarkList(userKey);
@@ -524,13 +525,22 @@ public class FrameMain extends JFrame {
          switchPanel("bookmark");
       });
       logoutButton.addActionListener(e -> {
+    	  reflash(listModel);
          logOut(mainPanel);
       });
       
       return userPanel;
       
    }
-   private  JPanel panelUserData() {
+   
+
+private void reflash(DefaultListModel<String> listModel2) {
+	listModel2.clear();
+	System.out.println(listModel2);
+	
+}
+
+private  JPanel panelUserData() {
 	      JPanel UserDataPanel = new JPanel(new GridBagLayout());
 	      GridBagConstraints gbc = new GridBagConstraints();
 	      gbc.fill = GridBagConstraints.BOTH;
