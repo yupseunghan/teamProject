@@ -8,6 +8,6 @@ import t2.model.vo.BroadTime;
 
 public interface BroadTimeDAO {
 
-	List<String> selectBoradTimeList(@Param("ch") String channel, @Param("we")String week);
+	List<BroadTime> getBroadTimeList(@Param("ch") String channel, @Param("we")String week);
 
 }

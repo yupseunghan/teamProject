@@ -16,5 +16,9 @@
   </environments>
   <mappers>
     <mapper resource="t2/dao/BroadTimeMapper.xml"/>
+    <mapper resource="t2/dao/ChannelMapper.xml"/>
+    <mapper resource="t2/dao/UserMapper.xml"/>
+    <mapper resource="t2/dao/ProgramMapper.xml"/>
+     <mapper resource="t2/dao/indexMapper.xml"/>
   </mappers>
 </configuration>

@@ -41,7 +41,7 @@ DROP TABLE IF EXISTS `PROGRAM`;
 
 CREATE TABLE `PROGRAM` (
 	`PG_KEY`	INT PRIMARY KEY AUTO_INCREMENT	NOT NULL,
-	`PG_NAME`	VARCHAR(20)	NOT NULL,
+	`PG_NAME`	VARCHAR(20) UNIQUE NOT NULL,
 	`PG_PA_KEY`	INT	NOT NULL
 );
 
@@ -170,27 +170,50 @@ REFERENCES `GENRE` (
 
 
 
-insert into program_age(pa_age) values("All");
+insert into program_age(pa_age) values("All"),("12세");
 insert into program(pg_name,pg_pa_key)
-values("무한도전",1);
-insert into channel(ch_name)values("SBS");
-insert into channel_pro(cp_pg_key,CP_CH_NUM) values(1,1);
+values("무한도전",1),("런닝맨",2);
+insert into channel(ch_name)values("SBS"),("KBS");
+insert into channel_pro(cp_pg_key,CP_CH_NUM) values(1,1),(2,1);
 INSERT INTO WEEK(WE_KEY,WE_NAME) VALUES(1,"월요일"),
 (2,"화요일"),(3,"수요일"),(4,"목요일"),(5,"금요일"),
 (6,"토요일"),(7,"일요일");
 INSERT INTO VIEW (VW_WE_KEY,VW_STATE,VW_CP_NUM) VALUES
-(2,"생방송",1);
+(2,"생방송",1),(2,"재방송",2);
 INSERT INTO BROADTIME(BT_VW_KEY,BT_DATE,BT_STARTTIME,BT_ENDTIME)VALUES
-(1,NOW(),NOW(),DATE_ADD(NOW(), INTERVAL 1 HOUR));
+(1,NOW(),NOW(),DATE_ADD(NOW(), INTERVAL 1 HOUR))
+,(2,NOW(),"09:00","10:00");
 INSERT INTO GENRE (GR_NAME) VALUES ("예능");
-INSERT INTO PROGRAMGENRE(PR_PG_KEY, PR_GR_NAME) VALUES(1, "예능");
+INSERT INTO PROGRAMGENRE(PR_PG_KEY, PR_GR_NAME) VALUES(1, "예능"),(2,"예능");
 #SBS 화요일을 선택하면 해당 방송사의 프로그램들이 방영시간 순으로 조회되는 쿼리
 SELECT 
-    CP_CH_NAME, PG_NAME, PA_AGE , PR_GR_NAME,BT_DATE,WE_NAME,BT_STARTTIME,BT_ENDTIME,PS_STATE
+    CH_NAME,BT_DATE, WE_NAME ,PG_NAME, PR_GR_NAME,PA_AGE,VW_STATE,BT_STARTTIME,BT_ENDTIME 
 FROM
-    BROADTIME
+	BROADTIME
         JOIN
     VIEW ON VW_KEY = BT_VW_KEY
 		JOIN
-	WEEK ON WE_KEY = VW_WE_KEY 
+	WEEK ON WE_KEY = VW_WE_KEY
+		join
+	CHANNEL_PRO ON CP_NUM = VW_CP_NUM 
+		join
+	CHANNEL ON CH_NUM = CP_CH_NUM
+		JOIN
+	PROGRAM ON PG_KEY = CP_PG_KEY
+		JOIN
+	PROGRAM_AGE ON PA_KEY = PG_PA_KEY
+		JOIN
+	PROGRAMGENRE ON PG_KEY = PR_PG_KEY
+    WHERE CH_NAME="SBS" AND WE_NAME="화요일"
+    ORDER BY BT_STARTTIME
 	;
+    select* from `index`;
+    insert into channel (ch_name) value("MBC");
+    insert into user(us_id,us_pw,us_name,us_authority) values ("admin","admin","admin","ADMIN");
+    insert into user(us_id,us_pw,us_name) values("asd","asd","asd"),("qwer","qwer","qwer");
+    insert into `index`(in_us_key,in_pg_key) values(4,1),(4,2),(4,3),(4,4);
+	select pg_name from `index`
+    join
+		program on pg_key = in_pg_key
+	where in_us_key=4;
+    
