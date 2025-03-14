@@ -14,4 +14,12 @@
 		program on pg_key = in_pg_key
 		where in_us_key=#{key};
 	</select>
+	
+	<delete id="delBookMark">
+	delete from `index` where in_pg_key=(select pg_key from program where pg_name=#{program}) and 
+	in_us_key=#{key};
+	</delete>
+	<insert id="insertBookMark">
+		insert into `index` (in_us_key,in_pg_key) value (#{uskey},#{pgkey});
+	</insert>
 </mapper>

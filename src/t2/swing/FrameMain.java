@@ -27,6 +27,7 @@ import t2.model.vo.User;
 import t2.model.vo.index;
 import t2.service.BroadTimeManager;
 import t2.service.ChannelManager;
+import t2.service.ProgramAgeManager;
 import t2.service.ProgramManager;
 import t2.service.UserManager;
 import t2.service.indexManager;
@@ -44,15 +45,21 @@ public class FrameMain extends JFrame {
    private JComboBox<String> tvBox, dayBox;
    private HashMap<String, List<String>> tvProgramMap; // 일단은 이렇게 했는데 나중에는 문자열 리스트로 가져올것
    private PanelLoginMenu loginRES;
+   public PanelSchedule PSRES;
    private static JTextField idText, pwText, pw2Text, nameText;
    private BroadTimeManager broadTimeManager = new BroadTimeManager();
    private ChannelManager channelManager = new ChannelManager();
    private UserManager userManager = new UserManager();
    private ProgramManager programManager = new ProgramManager();
    private indexManager indexManager = new indexManager();
-   private  int userKey;
-   private static List<index> bookMarkList;
-   private static DefaultListModel<String> listModel = new DefaultListModel<String>();
+   private ProgramAgeManager programAgeManager = new ProgramAgeManager();
+   
+   private int userKey;
+   private  List<index> bookMarkList;
+   private  DefaultListModel<String> listModel = new DefaultListModel<String>();
+   private String[] bmNames= {""};
+   private  JComboBox<String> bmBox = new JComboBox<String>();
+   private List<String> bmListStr = new ArrayList<String>();
    public FrameMain() {
       setTitle("방송 편성표 시스템");
       setSize(400, 500);
@@ -62,7 +69,7 @@ public class FrameMain extends JFrame {
       cardLayout = new CardLayout();
       mainPanel = new JPanel(cardLayout);
       add(mainPanel);
-
+    
       // 초기값
       // 여기서 방송사 전체 개수 가져와서 넣어야
       String[] tvNames = channelManager.getChannelList();
@@ -73,7 +80,11 @@ public class FrameMain extends JFrame {
 
       // 방송사 선택
       tvBox = new JComboBox<>(tvNames);
-      tvBox.addActionListener(e -> display());
+      tvBox.addActionListener(e -> {
+    	  
+    	  display();
+    	  
+    	  });
 
       // 방송편성표 리스트
       scheduleListModel = new DefaultListModel<>();
@@ -147,21 +158,26 @@ public class FrameMain extends JFrame {
        String week = dayBox.getItemAt(dayIndex);
        List<BroadTime> programs  = broadTimeManager.getBroadTimeList(channel,week);
        // 요일별 데이터 추가 필요
-
-       scheduleListModel.clear();
+       
+       reflash(scheduleListModel);
        scheduleListModel.addElement("방송사: " + channel + " (" + week + ")");
        scheduleListModel.addElement("================================");
+       
+       printList(programs);
+   }
 
-       if (programs.isEmpty()) {
+   private void printList(List<BroadTime> programs) {
+	   if (programs.isEmpty()) {
            scheduleListModel.addElement("등록된 프로그램이 없습니다.");
            return;
        } 
        for(BroadTime bt : programs) {
        	scheduleListModel.addElement(bt.toString());
        }
-   }
+       return;
+}
 
-   public static void switchPanel(String panelName) {
+public static void switchPanel(String panelName) {
       cardLayout.show(mainPanel, panelName);
    }
 
@@ -198,6 +214,7 @@ public class FrameMain extends JFrame {
          switchPanel("adminUSERboard");
       });
       logoutButton.addActionListener(e -> {
+    	  
          logOut(mainPanel);
       });
 
@@ -260,9 +277,9 @@ public class FrameMain extends JFrame {
 	      addComponent(adminTVBoardPanel, backButton, 0, 4, gbc);
 	      
 	      mainPanel.add(panelAdminPRMG(), "PRMG");
-	      //mainPanel.add(panelAdminTVMG(), "TVMG");
-	      //mainPanel.add(panelAdminGRMG(), "GRMG");
-	      //mainPanel.add(panelAdminBBMG(), "BBMG");
+	      mainPanel.add(panelAdminTVMG(), "TVMG");
+	      mainPanel.add(panelAdminGRMG(), "GRMG");
+	      mainPanel.add(panelAdminBBMG(), "BBMG");
 	      
 	      PRMGButton.addActionListener(e -> {
 	         JOptionPane.showMessageDialog(adminTVBoardPanel, "프로그램 추가 수정 삭제");
@@ -270,16 +287,16 @@ public class FrameMain extends JFrame {
 	      });
 	      TVMGButton.addActionListener(e -> {
 	         JOptionPane.showMessageDialog(adminTVBoardPanel, "방송국 추가 수정 삭제");
-	         //switchPanel("TVMG");         
+	         switchPanel("TVMG");         
 	      });
 	      GRMGButton.addActionListener(e -> {
 	         JOptionPane.showMessageDialog(adminTVBoardPanel, "장르 추가 수정 삭제");
-	         //switchPanel("GRMG");         
+	         switchPanel("GRMG");         
 	      });
 	      BBMGButton.addActionListener(e -> {
 	         JOptionPane.showMessageDialog(adminTVBoardPanel, "프로그램과 방송사 선택 후 요일과 시간 입력");
 	         // 만약 select로 이미 있는 프로그램,방송사,요일,시간이라면 알림 후 등록x
-	         //switchPanel("BBMG");
+	         switchPanel("BBMG");
 	         
 	      });
 	      backButton.addActionListener(e -> {
@@ -289,66 +306,416 @@ public class FrameMain extends JFrame {
 
 	      return adminTVBoardPanel;
 	   }
-   private static JPanel panelAdminBBMG() {
-
-	      return null;
-	   }
-
-	   private static JPanel panelAdminGRMG() {
-	      // TODO Auto-generated method stub
-	      return null;
-	   }
-
-	   private JPanel panelAdminTVMG() {
-	      JPanel TVMGPanel = new JPanel(new GridBagLayout());
+   private  JPanel panelAdminBBMG() {
+	      JPanel BBMG = new JPanel(new GridBagLayout());
 	      GridBagConstraints gbc = new GridBagConstraints();
 	      gbc.fill = GridBagConstraints.BOTH;
 	      gbc.weightx = 1.0;
 	      gbc.weighty = 1.0;
 
-	      JButton prADD = new JButton("프로그램 추가");
-	      JButton TVMGButton = new JButton("프로그램 수정");
-	      JButton GRMGButton = new JButton("프로그램 삭제");
-	      JButton BBMGButton = new JButton("프로그램 장르 등록");
-	      JButton backButton = new JButton("처음으로");
-	      
+	      // 등록된 프로그램을 모두 가져옴
+	      String[] pros = { "뉴스9", "1박 2일", "개그콘서트" };
+	      JComboBox<String> prBox = new JComboBox<>(pros);
+	      prBox.addActionListener(e -> {
+	      });
 
-	      addComponent(TVMGPanel, prADD, 0, 0, gbc);
-	      addComponent(TVMGPanel, TVMGButton, 0, 1, gbc);
-	      addComponent(TVMGPanel, GRMGButton, 0, 2, gbc);
-	      addComponent(TVMGPanel, BBMGButton, 0, 3, gbc);
-	      addComponent(TVMGPanel, backButton, 0, 4, gbc);
-	      
-	      mainPanel.add(panelPRADD(), "PRADD");
-	      //mainPanel.add(panelPRUPD(), "PRUPD");
-	      //mainPanel.add(panelPRDEL(), "PRDEL");
-	      //mainPanel.add(panelPRGR(), "PRGR");
-	      
-	      prADD.addActionListener(e -> {
-	         JOptionPane.showMessageDialog(TVMGPanel, "프로그램 추가");
-	         //switchPanel("PRADD");         
+	      // 등록된 방송사를 모두 가져옴
+	      String[] tvs = { "kbs", "mbc", "sbs" };
+	      JComboBox<String> tvBox = new JComboBox<>(tvs);
+	      tvBox.addActionListener(e -> {
 	      });
-	      TVMGButton.addActionListener(e -> {
-	         JOptionPane.showMessageDialog(TVMGPanel, "프로그램 수정");
-	         //switchPanel("PRUPD");         
+
+	      String[] days = { "일요일", "월요일", "화요일", "수요일", "목요일", "금요일", "토요일" };
+	      JComboBox<String> dayBox = new JComboBox<>(days);
+	      dayBox.addActionListener(e -> {
 	      });
-	      GRMGButton.addActionListener(e -> {
-	         JOptionPane.showMessageDialog(TVMGPanel, "프로그램 삭제");
-	         //switchPanel("PRDEL");         
+
+	      String[] hours = new String[26];
+	      hours[0] = "시작 시간";
+	      for (int i = 1; i <= 24; i++) {
+	         hours[i] = String.format("%02d", i - 1);
+	      }
+
+	      // 0~59분 배열 생성 (0번째는 "시작 분" 추가)
+	      String[] minutes = new String[61];
+	      minutes[0] = "시작 분";
+	      for (int i = 1; i < 60; i++) {
+	         minutes[i] = String.format("%02d", i - 1);
+	      }
+
+	      // JComboBox 생성 및 0번째 옵션 추가
+	      JComboBox<String> sTimeBox = new JComboBox<>(hours);
+	      sTimeBox.addActionListener(e -> {
 	      });
-	      BBMGButton.addActionListener(e -> {
-	         JOptionPane.showMessageDialog(TVMGPanel, "프로그램 장르 등록");
-	         //switchPanel("PRGR");
-	         
+
+	      JComboBox<String> sMinBox = new JComboBox<>(minutes);
+	      sMinBox.addActionListener(e -> {
 	      });
+
+	      // 0번째 옵션을 "끝 시간", "끝 분"으로 변경한 새로운 배열 생성
+	      String[] hoursWithEnd = hours.clone();
+	      hoursWithEnd[0] = "끝 시간";
+
+	      String[] minutesWithEnd = minutes.clone();
+	      minutesWithEnd[0] = "끝 분";
+
+	      JComboBox<String> fTimeBox = new JComboBox<>(hoursWithEnd);
+	      fTimeBox.addActionListener(e -> {
+	      });
+
+	      JComboBox<String> fMinBox = new JComboBox<>(minutesWithEnd);
+	      fMinBox.addActionListener(e -> {
+	      });
+
+	      JButton showSchedulePanel = new JButton("편성표 조회");
+
+	      JButton tvProAddBtn = new JButton("프로그램 등록");
+	      JButton tvProUpdBtn = new JButton("프로그램 수정");
+	      JButton tvProDelBtn = new JButton("프로그램 삭제");
+
+	      JButton backButton = new JButton("뒤로가기");
+
+	      addComponent(BBMG, showSchedulePanel, 0, 1, gbc);
+	      addComponent(BBMG, prBox, 0, 2, gbc);
+	      addComponent(BBMG, tvBox, 0, 3, gbc);
+	      addComponent(BBMG, dayBox, 0, 4, gbc);
+	      addComponent(BBMG, sTimeBox, 0, 5, gbc);
+	      addComponent(BBMG, sMinBox, 0, 6, gbc);
+	      addComponent(BBMG, fTimeBox, 0, 7, gbc);
+	      addComponent(BBMG, fMinBox, 0, 8, gbc);
+	      addComponent(BBMG, tvProAddBtn, 0, 9, gbc);
+	      addComponent(BBMG, tvProUpdBtn, 0, 10, gbc);
+	      addComponent(BBMG, tvProDelBtn, 0, 11, gbc);
+	      addComponent(BBMG, backButton, 0, 12, gbc);
+
+	      showSchedulePanel.addActionListener(e -> {
+	         if (PSRES != null) {
+	            PSRES.dispose();
+	            PSRES = null;
+	         }
+	         PSRES = new PanelSchedule();
+
+	      });
+	      /////////////////////////////////////// 추가
+	      /////////////////////////////////////// 버튼///////////////////////////////////////////
+
+	      // int PRIndex, TVIndex, STIndex, SMIndex, FTIndex, FMIndex;
+
+	      tvProAddBtn.addActionListener(e -> {
+	         // JOptionPane.showMessageDialog(BBMG, "프로그램 등록");
+
+	         int PRIndex = prBox.getSelectedIndex();
+	         int TVIndex = tvBox.getSelectedIndex();
+	         int STIndex = sTimeBox.getSelectedIndex();
+	         int SMIndex = sMinBox.getSelectedIndex();
+	         int FTIndex = fTimeBox.getSelectedIndex();
+	         int FMIndex = fMinBox.getSelectedIndex();
+
+	         if (PRIndex < 0 || TVIndex < 0 || STIndex < 0 || FTIndex < 0) {
+	            JOptionPane.showMessageDialog(BBMG, "선택해주세요.");
+	            return;
+	         }
+	         if (STIndex == 0 || FTIndex == 0) {
+	            JOptionPane.showMessageDialog(BBMG,
+	                  ((STIndex == 0) ? "시작시간 " : "") + ((FTIndex == 0) ? "끝시간 " : "") + "선택해주세요");
+	            return;
+	         }
+
+	         String selectedPR = prBox.getItemAt(PRIndex);
+	         String selectedTV = tvBox.getItemAt(TVIndex);
+	         String selectedST = sTimeBox.getItemAt(STIndex);
+	         String selectedSM = sMinBox.getItemAt(SMIndex);
+	         String selectedFT = fTimeBox.getItemAt(FTIndex);
+	         String selectedFM = fMinBox.getItemAt(FMIndex);
+
+	         if (SMIndex <= 0 || FMIndex <= 0) {
+	            selectedSM = "0";
+	            selectedFM = "0";
+	         }
+
+	         // selectedPR, selectedTV, selectedST, selectedSM, selectedFT, selectedFM 이용해서
+	         // 편성표 등록
+
+	         // 보내는데 성공하면?
+	         JOptionPane.showMessageDialog(BBMG, selectedPR + "등록.");
+	         // 보내는데 실패하면?
+	         // JOptionPane.showMessageDialog(BBMG, selectedPR + "등록 실패.");
+
+	      });
+
+	      /////////////////////////////////////// 수정
+	      /////////////////////////////////////// 버튼///////////////////////////////////////////
+
+	      final int[] res = { 0 };
+
+	      tvProUpdBtn.addActionListener(e -> {
+
+	         int PRIndex = prBox.getSelectedIndex();
+	         int TVIndex = tvBox.getSelectedIndex();
+	         int STIndex = sTimeBox.getSelectedIndex();
+	         int SMIndex = sMinBox.getSelectedIndex();
+	         int FTIndex = fTimeBox.getSelectedIndex();
+	         int FMIndex = fMinBox.getSelectedIndex();
+
+	         if (STIndex <= 0 || FTIndex <= 0) {
+	            JOptionPane.showMessageDialog(BBMG,
+	                  ((STIndex == 0) ? "시작시간 " : "") + ((FTIndex == 0) ? "끝시간 " : "") + "선택해주세요");
+	            return;
+	         }
+
+	         String selectedPR = prBox.getItemAt(PRIndex);
+	         String selectedTV = tvBox.getItemAt(TVIndex);
+	         String selectedST = sTimeBox.getItemAt(STIndex);
+	         String selectedSM = sMinBox.getItemAt(SMIndex);
+	         String selectedFT = fTimeBox.getItemAt(FTIndex);
+	         String selectedFM = fMinBox.getItemAt(FMIndex);
+
+	         if (SMIndex <= 0 || FMIndex <= 0) {
+	            selectedSM = "0";
+	            selectedFM = "0";
+	         }
+
+	         // 수정버튼 처음 눌렀을 때
+	         if (res[0] == 0) {
+
+	            // selectedPR, selectedTV, selectedST 을 이용해서 해당 방송에 해당 시간이 있는지 찾음. 없으면 안내문구 후
+	            // return;
+
+	            // 있으면
+	            if (true) {
+	               JOptionPane.showMessageDialog(BBMG, selectedPR + "수정할 내용을 입력해주세요.");
+
+	               res[0] = 1;
+	               return;
+	            }
+	            // 없으면
+	            /*
+	             * if(true) { JOptionPane.showMessageDialog(BBMG, selectedPR + "은 존재하지 않습니다.");
+	             * 
+	             * return; }
+	             */
+	         }
+
+	         // 수정버튼 두번째로 눌렀을 때
+	         // selectedPR, selectedTV, selectedST, selectedSM, selectedFT, selectedFM 이용해서
+	         // 편성표 수정
+
+	         // 보내는데 성공하면?
+	         if (true) {
+	            JOptionPane.showMessageDialog(BBMG, selectedPR + "등록.");
+	            res[0] = 0;
+	            return;
+	         }
+	         // 보내는데 실패하면?
+	         /*
+	          * if(true) { JOptionPane.showMessageDialog(BBMG, selectedPR + "등록 실패."); res[0]
+	          * = 0; return; }
+	          */
+	      });
+
+	      /////////////////////////////////////// 삭제
+	      /////////////////////////////////////// 버튼///////////////////////////////////////////
+
+	      tvProDelBtn.addActionListener(e -> {
+	         // JOptionPane.showMessageDialog(BBMG, "프로그램 등록");
+
+	         int PRIndex = prBox.getSelectedIndex();
+	         int TVIndex = tvBox.getSelectedIndex();
+	         int STIndex = sTimeBox.getSelectedIndex();
+	         int SMIndex = sMinBox.getSelectedIndex();
+	         int FTIndex = fTimeBox.getSelectedIndex();
+	         int FMIndex = fMinBox.getSelectedIndex();
+
+	         if (PRIndex < 0 || TVIndex < 0 || STIndex < 0 || FTIndex < 0) {
+	            JOptionPane.showMessageDialog(BBMG, "선택해주세요.");
+	            return;
+	         }
+	         if (STIndex == 0 || FTIndex == 0) {
+	            JOptionPane.showMessageDialog(BBMG,
+	                  ((STIndex == 0) ? "시작시간 " : "") + ((FTIndex == 0) ? "끝시간 " : "") + "선택해주세요");
+	            return;
+	         }
+
+	         String selectedPR = prBox.getItemAt(PRIndex);
+	         String selectedTV = tvBox.getItemAt(TVIndex);
+	         String selectedST = sTimeBox.getItemAt(STIndex);
+	         String selectedSM = sMinBox.getItemAt(SMIndex);
+	         String selectedFT = fTimeBox.getItemAt(FTIndex);
+	         String selectedFM = fMinBox.getItemAt(FMIndex);
+
+	         if (SMIndex <= 0 || FMIndex <= 0) {
+	            selectedSM = "0";
+	            selectedFM = "0";
+	         }
+
+	         // selectedPR, selectedTV, selectedST, selectedSM, selectedFT, selectedFM 이용해서
+	         // 해당하는 편성표 삭제
+
+	         // 보내는데 성공하면?
+	         JOptionPane.showMessageDialog(BBMG, selectedPR + "삭제.");
+	         // 보내는데 실패하면?
+	         // JOptionPane.showMessageDialog(BBMG, selectedPR + "삭제 실패.");
+
+	      });
+
 	      backButton.addActionListener(e -> {
-	         JOptionPane.showMessageDialog(TVMGPanel, "처음으로");
-	         switchPanel("admin");
+	         switchPanel("adminTVboard");
+
 	      });
 
-	      return TVMGPanel;
+	      return BBMG;
 	   }
 
+	   private  JPanel panelAdminGRMG() {
+		   JPanel GRMG = new JPanel(new GridBagLayout());
+		      GridBagConstraints gbc = new GridBagConstraints();
+		      gbc.fill = GridBagConstraints.BOTH;
+		      gbc.weightx = 1.0;
+		      gbc.weighty = 1.0;
+
+		      JTextField grName = new JTextField();
+		      JTextField grName2 = new JTextField();
+
+		      JButton btnUpdate = new JButton("장르 등록/수정");
+		      JButton btnDelete = new JButton("장르 삭제");
+		      JButton backButton = new JButton("뒤로가기");
+
+		      btnUpdate.addActionListener(e -> GRADDUP(grName, grName2)); // 여기서 만든 id를 db로 보냅니다.
+		      btnDelete.addActionListener(e -> GRDEL(grName));
+		      backButton.addActionListener(e -> switchPanel("adminTVboard"));
+
+		      addComponent(GRMG, new JLabel("장르명"), 0, 0, gbc);
+		      addComponent(GRMG, grName, 1, 0, gbc);
+		      addComponent(GRMG, new JLabel("장르 수정시"), 0, 1, gbc);
+		      addComponent(GRMG, grName2, 1, 1, gbc);
+
+		      gbc.gridx = 0;
+		      gbc.gridy = 2;
+		      gbc.gridwidth = 1;
+		      GRMG.add(btnUpdate, gbc);
+		      gbc.gridx = 1;
+		      GRMG.add(btnDelete, gbc);
+		      gbc.gridx = 0;
+		      gbc.gridy = 3;
+		      gbc.gridwidth = 2;
+		      GRMG.add(backButton, gbc);
+
+		      return GRMG;
+	   }
+	   private  void GRDEL(JTextField grName) {
+		      String grNameText = grName.getText().trim();
+		      int result = JOptionPane.showConfirmDialog(mainPanel, String.format("%s 삭제 하시겠습니까?", grNameText), "확인",
+		            JOptionPane.YES_NO_OPTION);
+		      if (result == JOptionPane.NO_OPTION) {
+		         return;
+		      }
+		      // grNameText 인 프로그램 삭제 ->
+		      // 결과 받아올수 있으면 int result = JOptionPane.showConfirmDialog(mainPanel,
+		      // String.format("%s 삭제되었습니다.", grNameText), "확인", JOptionPane.YES_NO_OPTION);
+
+		   }
+	   
+	   private static void GRADDUP(JTextField grName, JTextField grName2) {
+
+		      String grNameText = grName.getText().trim();
+		      String grName2Text = grName2.getText().trim();
+
+		      if (grNameText.isBlank()) {
+		         JOptionPane.showMessageDialog(mainPanel, "장르명은 입력해주세요.");
+		         return;
+		      }
+
+		      int result = JOptionPane.showConfirmDialog(mainPanel, "새로운 장르명 등록 하시겠습니까?", "확인", JOptionPane.YES_NO_OPTION);
+		      if (result == JOptionPane.NO_OPTION) {
+		         int result2 = JOptionPane.showConfirmDialog(mainPanel, "기존 장르명 수정 하시겠습니까?", "확인",
+		               JOptionPane.YES_NO_OPTION);
+		         if (result2 == JOptionPane.NO_OPTION)
+		            return;
+		         if (grName2Text.isBlank()) {
+		            JOptionPane.showMessageDialog(mainPanel, "수정할 장르명이 공란일 경우 수정이 불가합니다.");
+		            return;
+		         }
+		         // grNameText 장르 이름을 grName2Text로 변경
+		      }
+
+		      // grNameText 장르 등록
+		      return;
+		   }
+	   
+	   private JPanel panelAdminTVMG() {
+		   JPanel TVMG = new JPanel(new GridBagLayout());
+		      GridBagConstraints gbc = new GridBagConstraints();
+		      gbc.fill = GridBagConstraints.BOTH;
+		      gbc.weightx = 1.0;
+		      gbc.weighty = 1.0;
+
+		      JTextField tVName = new JTextField();
+		      JTextField tVName2 = new JTextField();
+
+		      JButton btnUpdate = new JButton("방송사 등록/수정");
+		      JButton btnDelete = new JButton("방송사 삭제");
+		      JButton backButton = new JButton("뒤로가기");
+
+		      btnUpdate.addActionListener(e -> TVADDUP(tVName, tVName2)); // 여기서 만든 id를 db로 보냅니다.
+		      btnDelete.addActionListener(e -> TVDEL(tVName));
+		      backButton.addActionListener(e -> switchPanel("adminTVboard"));
+
+		      addComponent(TVMG, new JLabel("방송사명"), 0, 0, gbc);
+		      addComponent(TVMG, tVName, 1, 0, gbc);
+		      addComponent(TVMG, new JLabel("방송사 수정시"), 0, 1, gbc);
+		      addComponent(TVMG, tVName2, 1, 1, gbc);
+
+		      gbc.gridx = 0;
+		      gbc.gridy = 2;
+		      gbc.gridwidth = 1;
+		      TVMG.add(btnUpdate, gbc);
+		      gbc.gridx = 1;
+		      TVMG.add(btnDelete, gbc);
+		      gbc.gridx = 0;
+		      gbc.gridy = 3;
+		      gbc.gridwidth = 2;
+		      TVMG.add(backButton, gbc);
+
+		      return TVMG;
+	   }
+	   private  void TVDEL(JTextField tVName) {
+		      String tvNameText = tVName.getText().trim();
+		      int result = JOptionPane.showConfirmDialog(mainPanel, String.format("%s 삭제 하시겠습니까?", tvNameText), "확인",
+		            JOptionPane.YES_NO_OPTION);
+		      if (result == JOptionPane.NO_OPTION) {
+		         return;
+		      }
+		      // tvNameText 인 프로그램 삭제 ->
+		      // 결과 받아올수 있으면 int result = JOptionPane.showConfirmDialog(mainPanel,
+		      // String.format("%s 삭제되었습니다.", tvNameText), "확인", JOptionPane.YES_NO_OPTION);
+
+		   }
+	   private void TVADDUP(JTextField tVName, JTextField tVName2) {
+
+		      String tVNameText = tVName.getText().trim();
+		      String tVName2Text = tVName2.getText().trim();
+
+		      if (tVNameText.isBlank()) {
+		         JOptionPane.showMessageDialog(mainPanel, "방송사 이름은 입력해주세요.");
+		         return;
+		      }
+
+		      int result = JOptionPane.showConfirmDialog(mainPanel, "새로운 방송사 등록 하시겠습니까?", "확인", JOptionPane.YES_NO_OPTION);
+		      if (result == JOptionPane.NO_OPTION) {
+		         int result2 = JOptionPane.showConfirmDialog(mainPanel, "기존 방송사 수정 하시겠습니까?", "확인",
+		               JOptionPane.YES_NO_OPTION);
+		         if (result2 == JOptionPane.NO_OPTION)
+		            return;
+		         if (tVName2Text.isBlank()) {
+		            JOptionPane.showMessageDialog(mainPanel, "수정할 방송사명이 공란일 경우 수정이 불가합니다.");
+		            return;
+		         }
+		         // tvNameText 방송사 이름을 tvName2Text로 변경
+		      }
+
+		      // tvNameText 방송사 등록
+		      return;
+		   }
 	   private JPanel panelAdminPRMG() {
 	      JPanel PRMGPanel = new JPanel(new GridBagLayout());
 	      GridBagConstraints gbc = new GridBagConstraints();
@@ -368,8 +735,7 @@ public class FrameMain extends JFrame {
 	      addComponent(PRMGPanel, backButton, 0, 4, gbc);
 	      
 	      mainPanel.add(panelPRADD(), "PRADD");
-	      //mainPanel.add(panelPRUPD(), "PRUPD");
-	      //mainPanel.add(panelPRDEL(), "PRDEL");
+
 	      mainPanel.add(panelPRGR(), "PRGR");
 	      
 	      prADD.addActionListener(e -> {
@@ -446,45 +812,123 @@ public class FrameMain extends JFrame {
 	   }
 
 	   private Component panelPRADD() {
-	        JPanel PRADDPanel = new JPanel(new GridBagLayout());
-	        GridBagConstraints gbc = new GridBagConstraints();
-	        gbc.fill = GridBagConstraints.BOTH;
-	        gbc.weightx = 1.0;
-	        gbc.weighty = 1.0;
+		   JPanel PRADDPanel = new JPanel(new GridBagLayout());
+		      GridBagConstraints gbc = new GridBagConstraints();
+		      gbc.fill = GridBagConstraints.BOTH;
+		      gbc.weightx = 1.0;
+		      gbc.weighty = 1.0;
 
-	        JTextField PRName = new JTextField();
-	        JTextField PRName2 = new JTextField();
-	        JTextField PRAge = new JTextField();
-	        JTextField PRAge2 = new JTextField();
-	        JButton btnUpdate = new JButton("프로그램 등록/수정");
-	        JButton btnDelete = new JButton("프로그램 삭제");
-	      JButton backButton = new JButton("뒤로가기");
+		      JTextField PRName = new JTextField();
+		      JTextField PRName2 = new JTextField();
+		      
+		      // 등록된 연령대 모두 가져옴
+		      String[] ages = { "모든 연령 시청가"
+		            , "7세 이상 시청가"
+		            , "12세 이상 시청가"
+		            , "15세 이상 시청가"
+		            , "19세 이상 시청가" };
+		      JComboBox<String> ageBox = new JComboBox<>(ages);
+		      ageBox.addActionListener(e -> {});
 
-	      //btnUpdate.addActionListener(e -> PRADDUP(PRName,PRName2,PRAge,PRAge2));   // 여기서 만든 id를 db로 보냅니다.
-	      backButton.addActionListener(e -> switchPanel("PRMG"));
-	        
-	        addComponent(PRADDPanel, new JLabel("프로그램명"), 0, 0, gbc);
-	        addComponent(PRADDPanel, PRName, 1, 0, gbc);
-	        addComponent(PRADDPanel, new JLabel("프로그램명 수정시"), 0, 1, gbc);
-	        addComponent(PRADDPanel, PRName2, 1, 1, gbc);
-	        addComponent(PRADDPanel, new JLabel("프로그램 연령대"), 0, 2, gbc);
-	        addComponent(PRADDPanel, PRAge, 1, 2, gbc);
-	        addComponent(PRADDPanel, new JLabel("연령대 수정시"), 0, 3, gbc);
-	        addComponent(PRADDPanel, PRAge2, 1, 3, gbc);
+		      JButton btnUpdate = new JButton("프로그램 등록/수정");
+		      JButton btnDelete = new JButton("프로그램 삭제");
+		      JButton backButton = new JButton("뒤로가기");
 
-	        gbc.gridx = 0; 
-	        gbc.gridy = 4; 
-	        gbc.gridwidth = 1; 
-	        PRADDPanel.add(btnUpdate, gbc);
-	        gbc.gridx = 1; 
-	        PRADDPanel.add(btnDelete, gbc);
-	        gbc.gridx = 0; 
-	        gbc.gridy = 5; 
-	        gbc.gridwidth = 2; 
-	        PRADDPanel.add(backButton, gbc);
-	        
-	        return PRADDPanel;
+		      btnUpdate.addActionListener(e -> {
+    
+		      int ageIndex = ageBox.getSelectedIndex();            
+		      String selectedAge = ageBox.getItemAt(ageIndex);      //일단 연령대 string으로 보내겠씁니다...
+		      
+		      PRADDUP(PRName, PRName2, selectedAge);
+		     
+		      }); // 여기서 만든 id를 db로 보냅니다.
+		      btnDelete.addActionListener(e -> PRDEL(PRName));
+		      backButton.addActionListener(e -> switchPanel("PRMG"));
+
+		      addComponent(PRADDPanel, new JLabel("프로그램명"), 0, 0, gbc);
+		      addComponent(PRADDPanel, PRName, 1, 0, gbc);
+		      addComponent(PRADDPanel, new JLabel("프로그램명 수정시"), 0, 1, gbc);
+		      addComponent(PRADDPanel, PRName2, 1, 1, gbc);
+		      addComponent(PRADDPanel, new JLabel("프로그램 연령대"), 0, 2, gbc);
+		      addComponent(PRADDPanel, ageBox, 1, 2, gbc);
+
+
+		      gbc.gridx = 0;
+		      gbc.gridy = 3;
+		      gbc.gridwidth = 1;
+		      PRADDPanel.add(btnUpdate, gbc);
+		      gbc.gridx = 1;
+		      PRADDPanel.add(btnDelete, gbc);
+		      gbc.gridx = 0;
+		      gbc.gridy = 4;
+		      gbc.gridwidth = 2;
+		      PRADDPanel.add(backButton, gbc);
+
+		      return PRADDPanel;
 	   }
+	   private  void PRDEL(JTextField pRName) {
+		      String pRNameText = pRName.getText().trim();
+		      int result = JOptionPane.showConfirmDialog(mainPanel, String.format("%s 삭제 하시겠습니까?", pRNameText), "확인",
+		            JOptionPane.YES_NO_OPTION);
+		      if (result == JOptionPane.NO_OPTION) {
+		         return;
+		      }
+		      // pRNameText 인 프로그램 삭제 ->
+		      // 결과 받아올수 있으면 int result = JOptionPane.showConfirmDialog(mainPanel,
+		      // String.format("%s 삭제되었습니다.", pRNameText), "확인", JOptionPane.YES_NO_OPTION);
+
+		   }
+	   
+	      private  void PRADDUP(JTextField pRName, JTextField pRName2, String selectedAge) {
+
+	          String pRNameText = pRName.getText().trim();
+	          String pRName2Text = pRName2.getText().trim();
+	          // 연령대 selectedAge로
+	          //String pRAgeText = pRAge.getText().trim();
+	          //String pRAge2Text = pRAge2.getText().trim();
+
+	          if (pRNameText.isBlank()) {
+	             JOptionPane.showMessageDialog(mainPanel, "프로그램 이름은 입력해주세요.");
+	             return;
+	          }
+	          int result = JOptionPane.showConfirmDialog(mainPanel, "새로운 프로그램을 등록 하시겠습니까?", "확인", JOptionPane.YES_NO_OPTION);
+	          if (result == JOptionPane.NO_OPTION) {
+	             int result2 = JOptionPane.showConfirmDialog(mainPanel, "기존 프로그램을 수정 하시겠습니까?", "확인",
+	                   JOptionPane.YES_NO_OPTION);
+	             if (result2 == JOptionPane.NO_OPTION)
+	                return;
+	             if (pRName2Text.isBlank()) {
+	                if (selectedAge.isBlank()) {
+	                   JOptionPane.showMessageDialog(mainPanel, "이름과 연령대 둘 다 선택하지 않았을 경우 수정이 불가합니다.");
+	                   return;
+	                }
+	                if(programManager.searchName(pRNameText)) {
+			        	  
+			        	  System.out.println("헬로");
+			        	  programManager.updateProgram(pRNameText,selectedAge);
+			        	  //업데이트 되었습니다!
+			        	  return;
+			        	  
+			          }
+	                //프로그램이 없습니다 등록해주세요
+	                return;
+	             }
+	             
+	             // pRNameText 의 이름을 pRName2Text로 연령대를 pRAge2Text로 변경
+	             //업데이트 성공 !
+	             return;
+	          }
+	          //// pRNameText 와 pRAgeText 가지고 프로그램 등록
+	          if(programManager.searchName(pRNameText)) {
+	        	  //이미 등록된 프로그램입니다
+	        	  return;
+	          }
+	          int ageKey = programAgeManager.getAgeKey(selectedAge);
+		      programManager.insertProgram(pRNameText,ageKey);
+		      //등록되셨습니다!
+	          return;
+	       }
+	   
    private  JPanel panelUser() {
 	  JPanel userPanel = new JPanel(new GridBagLayout());
       GridBagConstraints gbc = new GridBagConstraints();
@@ -501,7 +945,8 @@ public class FrameMain extends JFrame {
 
       
       mainPanel.add(panelUserData(), "userData");
-      mainPanel.add(panelBookmark(), "bookmark");
+      JPanel bookmarkPanel = panelBookmark(); 
+      mainPanel.add( bookmarkPanel, "bookmark");
       
       
       
@@ -513,19 +958,14 @@ public class FrameMain extends JFrame {
       bookmarkButton.addActionListener(e -> {
     	  listModel.clear();
          JOptionPane.showMessageDialog(userPanel, "즐겨찾기");
-         // new PanelSchedule(frameMain);
-         bookMarkList = indexManager.getBookMarkList(userKey);
-         System.out.println(bookMarkList);        
-	      // 여기서 for문으로 listModel.addElement(스트링); 해서 즐겨찾기 등록 	      
-	    System.out.println(userKey);
-    	for(index i : bookMarkList) {
-	    	  listModel.addElement(i.getPg_name());
-	      }
-    	
+     
+        setBookmarkList(userKey);
+   	
          switchPanel("bookmark");
       });
       logoutButton.addActionListener(e -> {
     	  reflash(listModel);
+    	  
          logOut(mainPanel);
       });
       
@@ -534,10 +974,9 @@ public class FrameMain extends JFrame {
    }
    
 
+
 private void reflash(DefaultListModel<String> listModel2) {
-	listModel2.clear();
-	System.out.println(listModel2);
-	
+	listModel2.clear();	
 }
 
 private  JPanel panelUserData() {
@@ -582,27 +1021,26 @@ private  JPanel panelUserData() {
 	      
 	      
 	        
-	      JList<String> list = new JList<>(listModel);
+	      JList<String> list= new JList<>(listModel);
 	      JScrollPane scrollPane = new JScrollPane(list);
-	        gbc.gridx = 0; gbc.gridy = 10; gbc.weighty = 10;
-	        bookMarkPanel.add(scrollPane, gbc);
-	      
-	        // 삭제용 combox(전체 프로그램 가져와서 넣어줘야함)
-	        String[] pros = programManager.getProgramList();
-	        JComboBox<String> prBox = new JComboBox<>(pros);      
-	        JButton bookmarkUpadateButton = new JButton("즐겨찾기 추가");
+		gbc.gridx = 0; gbc.gridy = 10; gbc.weighty = 10;
+		bookMarkPanel.add(scrollPane, gbc);
+		  
+		// 삭제용 combox(전체 프로그램 가져와서 넣어줘야함)
+		String[] pros = programManager.getProgramList();
+		JComboBox<String> prBox = new JComboBox<>(pros);      
+	    JButton bookmarkUpadateButton = new JButton("즐겨찾기 추가");
        
 	      // 삭제용 combox(이미 있는애들만)
-	      String[] bmNames = new String[listModel.getSize()];
-	      for (int i = 0; i < listModel.getSize(); i++) {
-	          bmNames[i] = listModel.getElementAt(i);                  //얘는 위에서 가져온 listModel에서 가져옵니다
-	      }
-	       JComboBox<String> bmBox = new JComboBox<>(bmNames);
+	      
 
 	      JButton bookmarkdeleteButton = new JButton("즐겨찾기 삭제");
 	       
 	      JButton backButton = new JButton("뒤로가기");
 	      
+	    
+	      
+	     
 	      addComponent(bookMarkPanel, prBox, 0, 11, gbc);
 	      addComponent(bookMarkPanel, bookmarkUpadateButton, 0, 12, gbc);
 	      addComponent(bookMarkPanel, bmBox, 0, 13, gbc);
@@ -610,13 +1048,28 @@ private  JPanel panelUserData() {
 	      addComponent(bookMarkPanel, backButton, 0, 15, gbc);
 	      
 	      bookmarkUpadateButton.addActionListener(e -> {
-	         JOptionPane.showMessageDialog(bookMarkPanel, "즐겨찾기에 추가");
-	         panelBookmarkAdd();
+	    	  String selectedProgram = (String) prBox.getSelectedItem();
+	          if (!listModel.contains(selectedProgram)) {
+	             listModel.addElement(selectedProgram);
+	             reflash(listModel);
+	             insertBookMark(userKey,selectedProgram);
+	             setBookmarkList(userKey);
+	             JOptionPane.showMessageDialog(bookMarkPanel, selectedProgram + " 즐겨찾기에 추가됨.");
+	          } else {
+	             JOptionPane.showMessageDialog(bookMarkPanel, "이미 즐겨찾기에 존재하는 프로그램입니다.");
+	          }
 	      });
 	      
 	      bookmarkdeleteButton.addActionListener(e -> {
-	         JOptionPane.showMessageDialog(bookMarkPanel, "즐겨찾기 삭제하는 메소드");
-	         panelBookmarkDel();
+	    	  String selectedProgram = (String) bmBox.getSelectedItem();
+	          if (selectedProgram != null) {
+	             listModel.removeElement(selectedProgram);
+	             reflash(listModel);
+	             delBookMark(userKey,selectedProgram);
+	             setBookmarkList(userKey);
+	             
+	             JOptionPane.showMessageDialog(bookMarkPanel, selectedProgram + " 즐겨찾기에서 삭제됨.");
+	          }
 	      });
 	      backButton.addActionListener(e -> {
 	         switchPanel("user");
@@ -624,56 +1077,31 @@ private  JPanel panelUserData() {
 	      return bookMarkPanel;
 	   }
    
-   
-   private  JPanel panelBookmarkUpdate() {
-	  JPanel bookMarkUpdatePanel = new JPanel(new GridBagLayout());
-      GridBagConstraints gbc = new GridBagConstraints();
-      gbc.fill = GridBagConstraints.BOTH;
-      gbc.weightx = 1.0;
-      gbc.weighty = 1.0;
-      
-      JButton bookmarkAddButton = new JButton("즐겨찾기 추가");
-      JButton bookmarkModButton = new JButton("즐겨찾기 수정");
-      JButton bookmarkdeleteButton = new JButton("즐겨찾기 삭제");
-      JButton backButton = new JButton("처음으로");
-      
-      addComponent(bookMarkUpdatePanel, bookmarkAddButton, 0, 0, gbc);
-      addComponent(bookMarkUpdatePanel, bookmarkModButton, 0, 1, gbc);
-      addComponent(bookMarkUpdatePanel, bookmarkdeleteButton, 0, 2, gbc);
-      addComponent(bookMarkUpdatePanel, backButton, 0, 3, gbc);
-   
-      bookmarkAddButton.addActionListener(e -> {
-         JOptionPane.showMessageDialog(bookMarkUpdatePanel, "즐겨찾기 추가하는 메소드");
-         panelBookmarkAdd();
-      });
-      bookmarkModButton.addActionListener(e -> {
-         JOptionPane.showMessageDialog(bookMarkUpdatePanel, "즐겨찾기 수정하는 메소드");
-         panelBookmarkMod();
-      });
-      bookmarkdeleteButton.addActionListener(e -> {
-         JOptionPane.showMessageDialog(bookMarkUpdatePanel, "즐겨찾기 삭제하는 메소드");
-         panelBookmarkDel();
-      });
-      backButton.addActionListener(e -> {
-         switchPanel("user");
-      });
-      
-      return bookMarkUpdatePanel;
-      
-   }
-   private static void panelBookmarkDel() {
-	      System.out.println("즐겨찾기 추가하는 메소드");
-   }
+   private void insertBookMark(int userKey, String selectedProgram) {
+	   	int pgKey = programManager.getPgKey(selectedProgram);
+	   	System.out.println(pgKey);
+	   	indexManager.insertBookMark(userKey,pgKey);
+	
+}
 
-   private static void panelBookmarkMod() {
-      System.out.println("즐겨찾기 수정하는 메소드");
-      
-   }
+private void delBookMark(int userKey, String selectedProgram) {
+	   	indexManager.delBookMark(userKey,selectedProgram);
+}
 
-   private static void panelBookmarkAdd() {
-      System.out.println("즐겨찾기 삭제하는 메소드");
-      
+private void setBookmarkList(int userKey) {
+	   
+	   List<index> bookMarkList = indexManager.getBookMarkList(userKey);                 
+	      // 여기서 for문으로 listModel.addElement(스트링); 해서 즐겨찾기 등록 	      
+	   bmBox.removeAllItems();
+	   for(index i : bookMarkList) {
+	    	listModel.addElement(i.getPg_name());
+	    	bmBox.addItem(i.getPg_name());
+	   }
+
+
    }
+   
+   
     private  JPanel CreatesignuptPanel() {
         JPanel signuptPanel = new JPanel(new GridBagLayout());
         GridBagConstraints gbc = new GridBagConstraints();

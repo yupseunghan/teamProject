@@ -33,4 +33,19 @@ public class ProgramManager {
 		String[] list = programDao.getProgramList();
 		return list;
 	}
+	public int getPgKey(String selectedProgram) {
+		int pgKey = programDao.getPgKey(selectedProgram);
+		return pgKey;
+	}
+	public void insertProgram(String pRNameText, int ageKey) {
+		programDao.insertProgram(pRNameText,ageKey);
+	}
+	public boolean searchName(String pRNameText) {
+		 if(pRNameText.equals(programDao.searchName(pRNameText)))
+			 return true;	
+		return false;
+	}
+	public void updateProgram(String pRNameText, String selectedAge) {
+		programDao.updateProgram(pRNameText,selectedAge);
+	}
 }
