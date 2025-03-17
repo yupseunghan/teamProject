@@ -27,6 +27,7 @@ import t2.model.vo.User;
 import t2.model.vo.index;
 import t2.service.BroadTimeManager;
 import t2.service.ChannelManager;
+import t2.service.GenreManager;
 import t2.service.ProgramAgeManager;
 import t2.service.ProgramManager;
 import t2.service.UserManager;
@@ -53,9 +54,11 @@ public class FrameMain extends JFrame {
    private ProgramManager programManager = new ProgramManager();
    private indexManager indexManager = new indexManager();
    private ProgramAgeManager programAgeManager = new ProgramAgeManager();
+   private GenreManager genreManager = new GenreManager();
    
    private int userKey;
    private  List<index> bookMarkList;
+   private List<BroadTime> programs; 
    private  DefaultListModel<String> listModel = new DefaultListModel<String>();
    private String[] bmNames= {""};
    private  JComboBox<String> bmBox = new JComboBox<String>();
@@ -81,9 +84,7 @@ public class FrameMain extends JFrame {
       // 방송사 선택
       tvBox = new JComboBox<>(tvNames);
       tvBox.addActionListener(e -> {
-    	  
     	  display();
-    	  
     	  });
 
       // 방송편성표 리스트
@@ -114,7 +115,7 @@ public class FrameMain extends JFrame {
       homePanel.add(printPanel, BorderLayout.CENTER);
       homePanel.add(logInPanel, BorderLayout.SOUTH);
 
-      loginButton.addActionListener(e -> logIn());
+      loginButton.addActionListener(e -> { logIn();});
       signupButton.addActionListener(e -> switchPanel("signup"));
       exitButton.addActionListener(e -> exitProgram());
 
@@ -142,21 +143,24 @@ public class FrameMain extends JFrame {
          System.exit(0);
       }
    }
-   private static void logOut(JPanel panel) {
+   private  void logOut(JPanel panel) {
       int result = JOptionPane.showConfirmDialog(mainPanel, "로그아웃 하시겠습니까?", "종료 확인", JOptionPane.YES_NO_OPTION);
       if (result == JOptionPane.YES_OPTION) {
          JOptionPane.showMessageDialog(panel, "로그아웃되었습니다.");
+         display();
+         
          FrameMain.switchPanel("home");
       }         
       
    }
    private void display() {
+	   
 	   int tvIndex = tvBox.getSelectedIndex();
        int dayIndex = dayBox.getSelectedIndex();
        if (tvIndex < 0 || dayIndex < 0) return;
        String channel = tvBox.getItemAt(tvIndex);
        String week = dayBox.getItemAt(dayIndex);
-       List<BroadTime> programs  = broadTimeManager.getBroadTimeList(channel,week);
+       programs  = broadTimeManager.getBroadTimeList(channel,week);
        // 요일별 데이터 추가 필요
        
        reflash(scheduleListModel);
@@ -173,6 +177,7 @@ public class FrameMain extends JFrame {
        } 
        for(BroadTime bt : programs) {
        	scheduleListModel.addElement(bt.toString());
+       	System.out.println(bt.toString());
        }
        return;
 }
@@ -612,10 +617,16 @@ public static void switchPanel(String panelName) {
 		      // grNameText 인 프로그램 삭제 ->
 		      // 결과 받아올수 있으면 int result = JOptionPane.showConfirmDialog(mainPanel,
 		      // String.format("%s 삭제되었습니다.", grNameText), "확인", JOptionPane.YES_NO_OPTION);
-
+		      if(!genreManager.checkGenre(grNameText)) {
+		        	 JOptionPane.showMessageDialog(mainPanel, "등록된 장르가 아닙니다");
+		        	 return;
+		         }
+		      genreManager.delGenre(grNameText);
+		      JOptionPane.showMessageDialog(mainPanel, "장르 삭제 완료");
+	        	 return;
 		   }
 	   
-	   private static void GRADDUP(JTextField grName, JTextField grName2) {
+	   private  void GRADDUP(JTextField grName, JTextField grName2) {
 
 		      String grNameText = grName.getText().trim();
 		      String grName2Text = grName2.getText().trim();
@@ -626,6 +637,7 @@ public static void switchPanel(String panelName) {
 		      }
 
 		      int result = JOptionPane.showConfirmDialog(mainPanel, "새로운 장르명 등록 하시겠습니까?", "확인", JOptionPane.YES_NO_OPTION);
+		      
 		      if (result == JOptionPane.NO_OPTION) {
 		         int result2 = JOptionPane.showConfirmDialog(mainPanel, "기존 장르명 수정 하시겠습니까?", "확인",
 		               JOptionPane.YES_NO_OPTION);
@@ -636,9 +648,24 @@ public static void switchPanel(String panelName) {
 		            return;
 		         }
 		         // grNameText 장르 이름을 grName2Text로 변경
+		         if(!genreManager.checkGenre(grNameText)) {
+		        	 JOptionPane.showMessageDialog(mainPanel, "등록된 장르가 아닙니다");
+		        	 return;
+		         }
+		         if(!genreManager.updateGnere(grNameText,grName2Text)) {
+		        	 JOptionPane.showMessageDialog(mainPanel, "수정할려는 장르가 이미 존재합니다");
+		        	 return;
+		         }
+		         JOptionPane.showMessageDialog(mainPanel, "수정 완료");
+		         return;
 		      }
 
 		      // grNameText 장르 등록
+		      if(!genreManager.insertGenre(grNameText)) {
+		    	  JOptionPane.showMessageDialog(mainPanel, "이미 등록된 장르");
+		    	  return;
+		      }
+		      JOptionPane.showMessageDialog(mainPanel, "등록 완료");
 		      return;
 		   }
 	   
@@ -904,8 +931,8 @@ public static void switchPanel(String panelName) {
 	                }
 	                if(programManager.searchName(pRNameText)) {
 			        	  
-			        	  System.out.println("헬로");
 			        	  programManager.updateProgram(pRNameText,selectedAge);
+			        	  
 			        	  //업데이트 되었습니다!
 			        	  return;
 			        	  

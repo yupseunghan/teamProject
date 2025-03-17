@@ -15,7 +15,7 @@ public class BroadTime {
 	
 	@Override
 	public String toString() {
-		return ch_name+" "+bt_date+" "+we_name+""+pg_name+" "+pr_gr_name+" "+pa_age+" "+vw_state+" "
+		return ch_name+" "+bt_date+" "+we_name+" "+pg_name+" "+pr_gr_name+" "+pa_age+" "+vw_state+" "
 	+bt_startTime+" ~ "+bt_endTime;
 	}
 	
