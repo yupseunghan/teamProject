@@ -17,7 +17,7 @@
 		<result property="pa_age" column="pa_age"/> 
 		<result property="vw_state" column="vw_state"/>  
 	</resultMap>
-	<select id="getBroadTimeList" resultMap="BroadTimeMap">
+	<select id="getBroadTimeList" resultType="t2.model.vo.BroadTime">
 		SELECT 
 		    CH_NAME,BT_DATE, WE_NAME ,PG_NAME, PR_GR_NAME,PA_AGE,VW_STATE,BT_STARTTIME,BT_ENDTIME
 		FROM

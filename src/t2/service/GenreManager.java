@@ -50,4 +50,7 @@ public class GenreManager {
 	public void delGenre(String grNameText) {
 		genreDao.delGenre(grNameText);
 	}
+	public String[] getGenreList() {
+		return genreDao.getGenreName();
+	}
 }

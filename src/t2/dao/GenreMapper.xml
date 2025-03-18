@@ -16,4 +16,7 @@
 	<delete id="delGenre">
 		delete from genre where gr_name=#{name};
 	</delete>
+	<select id="getGenreName" resultType="java.lang.String">
+		select * from genre;
+	</select>
 </mapper>

@@ -48,4 +48,13 @@ public class ProgramManager {
 	public void updateProgram(String pRNameText, String selectedAge) {
 		programDao.updateProgram(pRNameText,selectedAge);
 	}
+	public void updateProgramAll(String pRNameText, String pRName2Text, String selectedAge) {
+		programDao.updateProgramAll(pRNameText,pRName2Text,selectedAge);
+		
+	}
+	public void delProgram(String pRNameText) {
+		programDao.delProgram(pRNameText);
+		
+	}
+
 }

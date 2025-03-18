@@ -14,4 +14,8 @@ public interface ProgramDAO {
 
 	void updateProgram(@Param("program")String pRNameText, @Param("age")String selectedAge);
 
+	void updateProgramAll(@Param("old")String pRNameText,@Param("new") String pRName2Text, @Param("age")String selectedAge);
+
+	void delProgram(@Param("program")String pRNameText);
+
 }

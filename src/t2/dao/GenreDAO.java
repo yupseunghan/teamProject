@@ -12,4 +12,6 @@ public interface GenreDAO {
 
 	void delGenre(@Param("name")String grNameText);
 
+	String[] getGenreName();
+
 }
