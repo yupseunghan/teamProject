@@ -85,6 +85,8 @@ public class FrameMain extends JFrame {
     	  display();
     	  
     	  });
+      
+      
 
       // 방송편성표 리스트
       scheduleListModel = new DefaultListModel<>();
@@ -177,7 +179,7 @@ public class FrameMain extends JFrame {
        return;
 }
 
-public static void switchPanel(String panelName) {
+   public static void switchPanel(String panelName) {
       cardLayout.show(mainPanel, panelName);
    }
 
@@ -902,6 +904,8 @@ public static void switchPanel(String panelName) {
 	                   JOptionPane.showMessageDialog(mainPanel, "이름과 연령대 둘 다 선택하지 않았을 경우 수정이 불가합니다.");
 	                   return;
 	                }
+	                
+	                
 	                if(programManager.searchName(pRNameText)) {
 			        	  
 			        	  System.out.println("헬로");

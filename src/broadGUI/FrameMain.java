@@ -910,10 +910,14 @@ public class FrameMain extends JFrame {
 				// pRNameText 의 연령대를 pRAge2Text로 변경
 				return;
 			}
+			
+			
 			if (selectedAge.isBlank()) {
 				// pRNameText 의 이름을 pRName2Text로 변경
 				return;
 			}
+			
+			
 			// pRNameText 의 이름을 pRName2Text로 연령대를 pRAge2Text로 변경
 			return;
 		}
