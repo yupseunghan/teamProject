@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="t2.dao.ProgramGenreDAO">
+	<select id="selectPrGr" resultType="t2.model.vo.ProgramGenre">
+		select * from programgenre
+			where pr_pg_key = (select pg_key from program where pg_name=#{prName});
+	</select>
+	<insert id="insertPrGr">
+		insert into programgenre (pr_pg_key,pr_gr_name) values
+		((select pg_key from program where pg_name=#{prName})
+		,#{grName});
+	</insert>
+	<delete id="delPrGr">
+		delete from programgenre where pr_pg_key = (select pg_key from program where pg_name=#{prName}) and pr_gr_name=#{grName};
+	</delete>
+	<select id="selectDelPrGr" resultType="t2.model.vo.ProgramGenre">
+			select * from programgenre
+			join
+		program on pg_key=pr_pg_key
+		where pg_name=#{prName} and pr_gr_name=#{grName};
+	</select>
+</mapper>
+			
+			
+			
+			
+			

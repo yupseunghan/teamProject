@@ -25,7 +25,7 @@
  pg_pa_key =(select pa_key from program_age where pa_age=#{age})
  where pg_name=#{old};
 	</update>
-	<delete id="delProgram">
-		delete  from program where PG_NAME=#{program};
-	</delete>
+	<update id="delProgram">
+		update program set pg_show="N" where pg_name=#{program};
+	</update>
 </mapper>

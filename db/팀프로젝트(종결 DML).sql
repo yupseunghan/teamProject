@@ -2,7 +2,7 @@ insert into week (we_key,we_name) values
 (1,"월요일"), (2,"화요일"), (3,"수요일"),
 (4,"목요일"), (5,"금요일"), (6,"토요일"),
 (7,"일요일");
-
+insert into user (us_id,us_pw,us_name,us_authority) values("admin","admin","admin","ADMIN");
 insert into genre values
 ("예능"), ("드라마"), ("연예"),
 ("퀴즈"), ("시사"), ("스포츠"),
@@ -17,7 +17,8 @@ insert into program_age (pa_age) values
 
 insert into program (pg_name, pg_pa_key) values
 ("런닝맨", 1), ("무한도전", 1),("생생정보통", 1);
-
+insert into program (pg_name, pg_show,pg_pa_key) values
+("웃찾사","N",1),("동물농장","Y",1);
 insert into programgenre (pr_pg_key, pr_gr_name) values
 (1,"예능"),(2,"예능"),(3,"예능");
 

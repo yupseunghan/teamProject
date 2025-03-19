@@ -25,5 +25,6 @@
      <mapper resource="t2/dao/indexMapper.xml"/>
      <mapper resource="t2/dao/ProgramAgeMapper.xml"/>
      <mapper resource="t2/dao/GenreMapper.xml"/>
+     <mapper resource="t2/dao/ProgramGenreMapper.xml"/>
   </mappers>
 </configuration>

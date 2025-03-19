@@ -7,7 +7,6 @@ import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
 import java.awt.GridLayout;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 
@@ -30,6 +29,7 @@ import t2.service.BroadTimeManager;
 import t2.service.ChannelManager;
 import t2.service.GenreManager;
 import t2.service.ProgramAgeManager;
+import t2.service.ProgramGenreManager;
 import t2.service.ProgramManager;
 import t2.service.UserManager;
 import t2.service.indexManager;
@@ -40,16 +40,17 @@ public class FrameMain extends JFrame {
 
    private static JPanel mainPanel;
    private JButton loginButton, signupButton, exitButton;
-   
    private static CardLayout cardLayout;
    private DefaultListModel<String> scheduleListModel;
    private JList<String> scheduleList;
-   private JComboBox<String> tvBox, dayBox;
+   private JComboBox<String> tvBox = new JComboBox<String>();
+   private JComboBox<String> dayBox = new JComboBox<String>();
    private HashMap<String, List<String>> tvProgramMap; // 일단은 이렇게 했는데 나중에는 문자열 리스트로 가져올것
    private PanelLoginMenu loginRES;
    public PanelSchedule PSRES;
    private static JTextField idText, pwText, pw2Text, nameText;
    private BroadTimeManager broadTimeManager = new BroadTimeManager();
+   private ProgramGenreManager programGenreManager = new ProgramGenreManager();
    private ChannelManager channelManager = new ChannelManager();
    private UserManager userManager = new UserManager();
    private ProgramManager programManager = new ProgramManager();
@@ -59,6 +60,7 @@ public class FrameMain extends JFrame {
    private String[] pros = {""};
    private String[] prNames= {""};
    private String[] grNames= {""};
+   private String[] tvNames= {""};
    private int userKey;
    private  List<index> bookMarkList;
    private List<BroadTime> programs; 
@@ -81,7 +83,7 @@ public class FrameMain extends JFrame {
     
       // 초기값
       // 여기서 방송사 전체 개수 가져와서 넣어야
-      String[] tvNames = channelManager.getChannelList();
+      tvNames = channelManager.getChannelList();
 
       // 요일 선택
       String[] days = { "일요일", "월요일", "화요일", "수요일", "목요일", "금요일", "토요일" };
@@ -153,6 +155,11 @@ public class FrameMain extends JFrame {
       int result = JOptionPane.showConfirmDialog(mainPanel, "로그아웃 하시겠습니까?", "종료 확인", JOptionPane.YES_NO_OPTION);
       if (result == JOptionPane.YES_OPTION) {
          JOptionPane.showMessageDialog(panel, "로그아웃되었습니다.");
+         tvNames = channelManager.getChannelList();
+         tvBox.removeAllItems();
+         for(String i : tvNames) {
+        	 tvBox.addItem(i);
+         }
          
          display();
          
@@ -718,10 +725,15 @@ public static void switchPanel(String panelName) {
 		      if (result == JOptionPane.NO_OPTION) {
 		         return;
 		      }
-		      // tvNameText 인 프로그램 삭제 ->
-		      // 결과 받아올수 있으면 int result = JOptionPane.showConfirmDialog(mainPanel,
-		      // String.format("%s 삭제되었습니다.", tvNameText), "확인", JOptionPane.YES_NO_OPTION);
-
+		      
+		      if(!channelManager.selectChannel(tvNameText)) {
+		    	  JOptionPane.showMessageDialog(mainPanel, "존재하지 않는 방송사입니다.");
+		    	  return;
+		      }
+		   // tvNameText 인 프로그램 삭제 ->
+		      channelManager.delChannel(tvNameText);
+		      JOptionPane.showMessageDialog(mainPanel, "삭제 완료");
+		      return;
 		   }
 	   private void TVADDUP(JTextField tVName, JTextField tVName2) {
 
@@ -732,7 +744,7 @@ public static void switchPanel(String panelName) {
 		         JOptionPane.showMessageDialog(mainPanel, "방송사 이름은 입력해주세요.");
 		         return;
 		      }
-
+		      
 		      int result = JOptionPane.showConfirmDialog(mainPanel, "새로운 방송사 등록 하시겠습니까?", "확인", JOptionPane.YES_NO_OPTION);
 		      if (result == JOptionPane.NO_OPTION) {
 		         int result2 = JOptionPane.showConfirmDialog(mainPanel, "기존 방송사 수정 하시겠습니까?", "확인",
@@ -743,10 +755,28 @@ public static void switchPanel(String panelName) {
 		            JOptionPane.showMessageDialog(mainPanel, "수정할 방송사명이 공란일 경우 수정이 불가합니다.");
 		            return;
 		         }
-		         // tvNameText 방송사 이름을 tvName2Text로 변경
+		         
+		         if(!channelManager.selectChannel(tVNameText)) {
+			    	  JOptionPane.showMessageDialog(mainPanel, "수정하려는 방송사가 없습니다.");
+			    	  return;
+			      }
+		         if(channelManager.selectChannel(tVName2Text)) {
+			    	  JOptionPane.showMessageDialog(mainPanel, "수정하려는 방송사가 이미 등록되어 있습니다");
+			    	  return;
+			      }
+		      // tvNameText 방송사 이름을 tvName2Text로 변경
+		         channelManager.updateChannel(tVNameText,tVName2Text);
+		         JOptionPane.showMessageDialog(mainPanel, "수정 완료");
+		         return;
 		      }
 
-		      // tvNameText 방송사 등록
+		     
+		      if(channelManager.selectChannel(tVNameText)) {
+		    	  JOptionPane.showMessageDialog(mainPanel, "이미 등록되어 있는 방송사입니다.");
+		    	  return;
+		      }
+		      channelManager.insertChannel(tVNameText);
+		      JOptionPane.showMessageDialog(mainPanel, "방송사 등록 완료");
 		      return;
 		   }
 	   private JPanel panelAdminPRMG() {
@@ -815,9 +845,38 @@ public static void switchPanel(String panelName) {
 	       JButton btnAdd = new JButton("장르 등록");
 	       JButton btnDelete = new JButton("장르 삭제");
 	       JButton backButton = new JButton("뒤로가기");
-
+	       
+	       btnAdd.addActionListener(e ->{
+	    	   int ageIndex = prBox2.getSelectedIndex();
+			   String prName = prBox2.getItemAt(ageIndex);
+			   
+			   int ageIndex2 = grBox.getSelectedIndex();            
+			   String grName = grBox.getItemAt(ageIndex2);
+			   if(programGenreManager.selectPrGr(prName,grName)) {
+				   JOptionPane.showMessageDialog(mainPanel, "프로그램에 이미 장르가 등록되어 있습니다");
+				   return;
+			   }
+			   programGenreManager.insertPrGr(prName,grName);
+			   JOptionPane.showMessageDialog(mainPanel, "등록 성공");
+			  
+	       });
+	       btnDelete.addActionListener(e -> {
+	    	   int ageIndex = prBox2.getSelectedIndex();
+			   String prName = prBox2.getItemAt(ageIndex);
+			   
+			   int ageIndex2 = grBox.getSelectedIndex();            
+			   String grName = grBox.getItemAt(ageIndex2);
+			   if(!programGenreManager.selectDelPrGr(prName,grName)) {
+				   JOptionPane.showMessageDialog(mainPanel, "프로그램에 등록되어있지 않은 장르입니다.");
+				   return;
+			   }
+			   programGenreManager.delPrGr(prName,grName);
+			   JOptionPane.showMessageDialog(mainPanel, "삭제 완료");
+			   return;
+			   
+	       });
 	       backButton.addActionListener(e -> switchPanel("PRMG"));
-
+	       
 	       gbc.gridx = 0;
 	       gbc.gridy = 0;
 	       gbc.gridwidth = 2;
@@ -872,7 +931,7 @@ public static void switchPanel(String panelName) {
 		      ageBox.addActionListener(e -> {});
 
 		      JButton btnUpdate = new JButton("프로그램 등록/수정");
-		      JButton btnDelete = new JButton("프로그램 삭제");
+		      JButton btnDelete = new JButton("방영 종료");
 		      JButton backButton = new JButton("뒤로가기");
 
 		      btnUpdate.addActionListener(e -> {
@@ -912,7 +971,7 @@ public static void switchPanel(String panelName) {
 	   }
 	   private  void PRDEL(JTextField pRName) {
 		      String pRNameText = pRName.getText().trim();
-		      int result = JOptionPane.showConfirmDialog(mainPanel, String.format("%s 삭제 하시겠습니까?", pRNameText), "확인",
+		      int result = JOptionPane.showConfirmDialog(mainPanel, String.format("%s 방영을 종료 하시겠습니까?", pRNameText), "확인",
 		            JOptionPane.YES_NO_OPTION);
 		      if (result == JOptionPane.NO_OPTION) {
 		         return;
@@ -922,7 +981,7 @@ public static void switchPanel(String panelName) {
 		    	  return;
 		      }
 		      programManager.delProgram(pRNameText);
-		      JOptionPane.showMessageDialog(mainPanel, "프로그램이 삭제되었습니다");
+		      JOptionPane.showMessageDialog(mainPanel, "프로그램 방영이 종료 되었습니다");
 		      return;
 		      // pRNameText 인 프로그램 삭제 ->
 		      // 결과 받아올수 있으면 int result = JOptionPane.showConfirmDialog(mainPanel,
