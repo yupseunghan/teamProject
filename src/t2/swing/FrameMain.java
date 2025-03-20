@@ -6,6 +6,8 @@ import java.awt.Component;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
 import java.awt.GridLayout;
+import java.awt.event.FocusEvent;
+import java.awt.event.FocusListener;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -23,15 +25,19 @@ import javax.swing.JTextField;
 
 import lombok.Data;
 import t2.model.vo.BroadTime;
+import t2.model.vo.ChannelPro;
 import t2.model.vo.User;
+import t2.model.vo.View;
 import t2.model.vo.index;
 import t2.service.BroadTimeManager;
 import t2.service.ChannelManager;
+import t2.service.ChannelProManager;
 import t2.service.GenreManager;
 import t2.service.ProgramAgeManager;
 import t2.service.ProgramGenreManager;
 import t2.service.ProgramManager;
 import t2.service.UserManager;
+import t2.service.ViewManager;
 import t2.service.indexManager;
 
 @Data
@@ -52,15 +58,21 @@ public class FrameMain extends JFrame {
    private BroadTimeManager broadTimeManager = new BroadTimeManager();
    private ProgramGenreManager programGenreManager = new ProgramGenreManager();
    private ChannelManager channelManager = new ChannelManager();
+   private ChannelProManager channelProManager = new ChannelProManager();
    private UserManager userManager = new UserManager();
    private ProgramManager programManager = new ProgramManager();
    private indexManager indexManager = new indexManager();
    private ProgramAgeManager programAgeManager = new ProgramAgeManager();
    private GenreManager genreManager = new GenreManager();
+   private ViewManager viewManager = new ViewManager();
    private String[] pros = {""};
    private String[] prNames= {""};
    private String[] grNames= {""};
    private String[] tvNames= {""};
+   private String[] tvs = {" "};
+   private String[] pross = { " " };
+   private JComboBox<String> prsBox = new JComboBox<>(pross);
+   private JComboBox<String> tvsBox = new JComboBox<>(tvs);
    private int userKey;
    private  List<index> bookMarkList;
    private List<BroadTime> programs; 
@@ -88,7 +100,7 @@ public class FrameMain extends JFrame {
       // 요일 선택
       String[] days = { "일요일", "월요일", "화요일", "수요일", "목요일", "금요일", "토요일" };
       dayBox = new JComboBox<>(days);
-
+      dayBox.addActionListener(e -> display());
       // 방송사 선택
       tvBox = new JComboBox<>(tvNames);
       tvBox.addActionListener(e -> {
@@ -312,6 +324,12 @@ public static void switchPanel(String panelName) {
 	         switchPanel("GRMG");         
 	      });
 	      BBMGButton.addActionListener(e -> {
+	    	  tvs = channelManager.getChannelList();
+	          tvsBox.removeAllItems();
+	          for(String i : tvs) {
+	         	 tvsBox.addItem(i);
+	          }
+	          setProgramList();
 	         JOptionPane.showMessageDialog(adminTVBoardPanel, "프로그램과 방송사 선택 후 요일과 시간 입력");
 	         // 만약 select로 이미 있는 프로그램,방송사,요일,시간이라면 알림 후 등록x
 	         switchPanel("BBMG");
@@ -332,15 +350,15 @@ public static void switchPanel(String panelName) {
 	      gbc.weighty = 1.0;
 
 	      // 등록된 프로그램을 모두 가져옴
-	      String[] pros = { "뉴스9", "1박 2일", "개그콘서트" };
-	      JComboBox<String> prBox = new JComboBox<>(pros);
-	      prBox.addActionListener(e -> {
+	      
+	      prsBox.addActionListener(e -> {
+	    	  
 	      });
 
 	      // 등록된 방송사를 모두 가져옴
-	      String[] tvs = { "kbs", "mbc", "sbs" };
-	      JComboBox<String> tvBox = new JComboBox<>(tvs);
-	      tvBox.addActionListener(e -> {
+	      
+	      tvsBox.addActionListener(e -> {
+	    	  
 	      });
 
 	      String[] days = { "일요일", "월요일", "화요일", "수요일", "목요일", "금요일", "토요일" };
@@ -385,6 +403,12 @@ public static void switchPanel(String panelName) {
 	      fMinBox.addActionListener(e -> {
 	      });
 
+	      // 방영상태 박스. 이건 이대로 ok
+	      String[] states = { "방영상태를 선택해주세요.", "생방송", "재방송", "휴방" };
+	      JComboBox<String> stateBox = new JComboBox<>(states);
+	      stateBox.addActionListener(e -> {
+	      });
+	      
 	      JButton showSchedulePanel = new JButton("편성표 조회");
 
 	      JButton tvProAddBtn = new JButton("프로그램 등록");
@@ -392,27 +416,45 @@ public static void switchPanel(String panelName) {
 	      JButton tvProDelBtn = new JButton("프로그램 삭제");
 
 	      JButton backButton = new JButton("뒤로가기");
-
-	      addComponent(BBMG, showSchedulePanel, 0, 1, gbc);
-	      addComponent(BBMG, prBox, 0, 2, gbc);
-	      addComponent(BBMG, tvBox, 0, 3, gbc);
+	      JTextField textField = new JTextField();
+	      textField.setColumns(20);
+	      addComponent(BBMG, textField, 0, 1, gbc);
+	      addComponent(BBMG, showSchedulePanel, 0, 0, gbc);
+	      addComponent(BBMG, prsBox, 0, 2, gbc);
+	      addComponent(BBMG, tvsBox, 0, 3, gbc);
 	      addComponent(BBMG, dayBox, 0, 4, gbc);
 	      addComponent(BBMG, sTimeBox, 0, 5, gbc);
 	      addComponent(BBMG, sMinBox, 0, 6, gbc);
 	      addComponent(BBMG, fTimeBox, 0, 7, gbc);
 	      addComponent(BBMG, fMinBox, 0, 8, gbc);
-	      addComponent(BBMG, tvProAddBtn, 0, 9, gbc);
-	      addComponent(BBMG, tvProUpdBtn, 0, 10, gbc);
-	      addComponent(BBMG, tvProDelBtn, 0, 11, gbc);
-	      addComponent(BBMG, backButton, 0, 12, gbc);
+	      addComponent(BBMG, stateBox, 0, 9, gbc);
+	      addComponent(BBMG, tvProAddBtn, 0, 10, gbc);
+	      addComponent(BBMG, tvProUpdBtn, 0, 11, gbc);
+	      addComponent(BBMG, tvProDelBtn, 0, 12, gbc);
+	      addComponent(BBMG, backButton, 0, 13, gbc);
+	      textField.addFocusListener(new FocusListener() {
+	    	    @Override
+	    	    public void focusGained(FocusEvent e) {
+	    	        // 포커스를 받으면 텍스트를 지운다.
+	    	    	if (textField.getText().equals("날짜를 입력하세요")) {
+	    	            textField.setText("");
+	    	        }
+	    	    }
 
+	    	    @Override
+	    	    public void focusLost(FocusEvent e) {
+	    	        // 포커스를 잃으면 텍스트를 원래대로 돌린다.
+	    	        if (textField.getText().isEmpty()) {
+	    	            textField.setText("날짜를 입력하세요");
+	    	        }
+	    	    }
+	    	});
 	      showSchedulePanel.addActionListener(e -> {
 	         if (PSRES != null) {
 	            PSRES.dispose();
 	            PSRES = null;
 	         }
 	         PSRES = new PanelSchedule();
-
 	      });
 	      /////////////////////////////////////// 추가
 	      /////////////////////////////////////// 버튼///////////////////////////////////////////
@@ -421,15 +463,15 @@ public static void switchPanel(String panelName) {
 
 	      tvProAddBtn.addActionListener(e -> {
 	         // JOptionPane.showMessageDialog(BBMG, "프로그램 등록");
-
-	         int PRIndex = prBox.getSelectedIndex();
-	         int TVIndex = tvBox.getSelectedIndex();
+	    	 int PRIndex = prsBox.getSelectedIndex();
+		     int TVIndex = tvsBox.getSelectedIndex();
+		     int DayIndex = dayBox.getSelectedIndex();
 	         int STIndex = sTimeBox.getSelectedIndex();
 	         int SMIndex = sMinBox.getSelectedIndex();
 	         int FTIndex = fTimeBox.getSelectedIndex();
 	         int FMIndex = fMinBox.getSelectedIndex();
-
-	         if (PRIndex < 0 || TVIndex < 0 || STIndex < 0 || FTIndex < 0) {
+	         int stateIndex = stateBox.getSelectedIndex();
+	         if (PRIndex < 0 || TVIndex < 0 || STIndex < 0 || FTIndex < 0 ||stateIndex <= 0) {
 	            JOptionPane.showMessageDialog(BBMG, "선택해주세요.");
 	            return;
 	         }
@@ -439,25 +481,58 @@ public static void switchPanel(String panelName) {
 	            return;
 	         }
 
+	         
 	         String selectedPR = prBox.getItemAt(PRIndex);
 	         String selectedTV = tvBox.getItemAt(TVIndex);
+	         String selectedDay = dayBox.getItemAt(DayIndex);
 	         String selectedST = sTimeBox.getItemAt(STIndex);
 	         String selectedSM = sMinBox.getItemAt(SMIndex);
 	         String selectedFT = fTimeBox.getItemAt(FTIndex);
 	         String selectedFM = fMinBox.getItemAt(FMIndex);
+	         
+	         String selectedState = null;
+	         switch(stateIndex) {
+	            case 1 : selectedState = "생방송"; break;
+	            case 2 : selectedState = "재방송"; break;
+	            case 3 : selectedState = "휴방"; break;
+	            default : break;
+	            };
 
 	         if (SMIndex <= 0 || FMIndex <= 0) {
 	            selectedSM = "0";
 	            selectedFM = "0";
 	         }
-
-	         // selectedPR, selectedTV, selectedST, selectedSM, selectedFT, selectedFM 이용해서
-	         // 편성표 등록
-
-	         // 보내는데 성공하면?
-	         JOptionPane.showMessageDialog(BBMG, selectedPR + "등록.");
-	         // 보내는데 실패하면?
-	         // JOptionPane.showMessageDialog(BBMG, selectedPR + "등록 실패.");
+	         ChannelPro cp = channelProManager.selectCp(selectedPR,selectedTV);
+	         String day =textField.getText();
+    		 String startTime= selectedST+":"+selectedSM+":00";
+    		 String endTime = selectedFT+":"+selectedFM+":00";
+	         if( cp != null) {
+	        	 //채널프로에서 이미 있어
+	        	 System.out.println("채널프로에 있대");
+	        	 View view =viewManager.select(cp.getCp_num(),selectedDay,selectedState);
+	        	 if(view != null) {
+	        		 //뷰에도 있데
+	        		 System.out.println("뷰에도 있대");
+	        		 ;
+	        		 BroadTime bt = broadTimeManager.select(view.getVw_key(),day,startTime);
+	        		 if(bt != null) {
+	        			 //이미 편성표에 있데
+	        			 JOptionPane.showMessageDialog(mainPanel, "이미 편성표에 등록 되어 있습니다");
+	        			 return;
+	        		 }//편성표에만 없대 등록해
+	        		 broadTimeManager.insertBt(view.getVw_key(),day,startTime,endTime );
+	        		 JOptionPane.showMessageDialog(mainPanel, "편성표에 등록 되었습니다");
+	        		 return;
+	        	 }//뷰에 없대 뷰 부터 다 등록해
+	        	 View vieW = viewManager.insert(cp.getCp_num(),selectedState,selectedDay);
+		         broadTimeManager.insertBt(vieW.getVw_key(),day,startTime,endTime );
+		         JOptionPane.showMessageDialog(mainPanel, "편성표에 등록 되었습니다");
+	        	 return;
+	         }//채널프로에 없대 다 등록해
+	         ChannelPro cP =channelProManager.insertCp(selectedPR,selectedTV);
+	         View vieW = viewManager.insert(cP.getCp_num(),selectedState,selectedDay);
+	         broadTimeManager.insertBt(vieW.getVw_key(),day,startTime,endTime );
+	         JOptionPane.showMessageDialog(mainPanel, "편성표에 등록 되었습니다");
 
 	      });
 
@@ -468,18 +543,27 @@ public static void switchPanel(String panelName) {
 
 	      tvProUpdBtn.addActionListener(e -> {
 
-	         int PRIndex = prBox.getSelectedIndex();
-	         int TVIndex = tvBox.getSelectedIndex();
+	         int PRIndex = prsBox.getSelectedIndex();
+	         int TVIndex = tvsBox.getSelectedIndex();
 	         int STIndex = sTimeBox.getSelectedIndex();
 	         int SMIndex = sMinBox.getSelectedIndex();
 	         int FTIndex = fTimeBox.getSelectedIndex();
 	         int FMIndex = fMinBox.getSelectedIndex();
+	         int stateIndex = stateBox.getSelectedIndex();
 
 	         if (STIndex <= 0 || FTIndex <= 0) {
 	            JOptionPane.showMessageDialog(BBMG,
 	                  ((STIndex == 0) ? "시작시간 " : "") + ((FTIndex == 0) ? "끝시간 " : "") + "선택해주세요");
 	            return;
 	         }
+	         
+	         String selectedState = null;
+	         switch(stateIndex) {
+	         case 1 : selectedState = "생방송"; break;
+	         case 2 : selectedState = "재방송"; break;
+	         case 3 : selectedState = "휴방"; break;
+	         default : break;
+	         };
 
 	         String selectedPR = prBox.getItemAt(PRIndex);
 	         String selectedTV = tvBox.getItemAt(TVIndex);
@@ -504,6 +588,7 @@ public static void switchPanel(String panelName) {
 	               JOptionPane.showMessageDialog(BBMG, selectedPR + "수정할 내용을 입력해주세요.");
 
 	               res[0] = 1;
+	               System.out.println(selectedPR+selectedTV+selectedST+selectedSM+selectedFT+selectedFM+selectedState);
 	               return;
 	            }
 	            // 없으면
@@ -520,8 +605,13 @@ public static void switchPanel(String panelName) {
 
 	         // 보내는데 성공하면?
 	         if (true) {
+	            
+	            if(stateIndex==0) {/*방영상태가 선택 안됐으니 방송명, 방송사명, 시간만 update*/}
+	            else {/*방송명, 방송사명, 시간, 방영상태 update*/}
+	            
 	            JOptionPane.showMessageDialog(BBMG, selectedPR + "등록.");
 	            res[0] = 0;
+	            System.out.println(selectedPR+selectedTV+selectedST+selectedSM+selectedFT+selectedFM+selectedState);
 	            return;
 	         }
 	         // 보내는데 실패하면?
@@ -529,6 +619,8 @@ public static void switchPanel(String panelName) {
 	          * if(true) { JOptionPane.showMessageDialog(BBMG, selectedPR + "등록 실패."); res[0]
 	          * = 0; return; }
 	          */
+	         
+	         
 	      });
 
 	      /////////////////////////////////////// 삭제
@@ -536,15 +628,18 @@ public static void switchPanel(String panelName) {
 
 	      tvProDelBtn.addActionListener(e -> {
 	         // JOptionPane.showMessageDialog(BBMG, "프로그램 등록");
-
-	         int PRIndex = prBox.getSelectedIndex();
-	         int TVIndex = tvBox.getSelectedIndex();
+	    	  
+		         
+	         int PRIndex = prsBox.getSelectedIndex();
+	         int TVIndex = tvsBox.getSelectedIndex();
+	         int DayIndex = dayBox.getSelectedIndex();
 	         int STIndex = sTimeBox.getSelectedIndex();
 	         int SMIndex = sMinBox.getSelectedIndex();
 	         int FTIndex = fTimeBox.getSelectedIndex();
 	         int FMIndex = fMinBox.getSelectedIndex();
+	         int stateIndex = stateBox.getSelectedIndex();
 
-	         if (PRIndex < 0 || TVIndex < 0 || STIndex < 0 || FTIndex < 0) {
+	         if (PRIndex < 0 || TVIndex < 0 || STIndex < 0 || FTIndex < 0||stateIndex <= 0) {
 	            JOptionPane.showMessageDialog(BBMG, "선택해주세요.");
 	            return;
 	         }
@@ -556,24 +651,50 @@ public static void switchPanel(String panelName) {
 
 	         String selectedPR = prBox.getItemAt(PRIndex);
 	         String selectedTV = tvBox.getItemAt(TVIndex);
+	         String selectedDay = dayBox.getItemAt(DayIndex);
 	         String selectedST = sTimeBox.getItemAt(STIndex);
 	         String selectedSM = sMinBox.getItemAt(SMIndex);
 	         String selectedFT = fTimeBox.getItemAt(FTIndex);
 	         String selectedFM = fMinBox.getItemAt(FMIndex);
-
+	         String selectedState = null;
+	         switch(stateIndex) {
+	            case 1 : selectedState = "생방송"; break;
+	            case 2 : selectedState = "재방송"; break;
+	            case 3 : selectedState = "휴방"; break;
+	            default : break;
+            };
 	         if (SMIndex <= 0 || FMIndex <= 0) {
 	            selectedSM = "0";
 	            selectedFM = "0";
 	         }
-
-	         // selectedPR, selectedTV, selectedST, selectedSM, selectedFT, selectedFM 이용해서
-	         // 해당하는 편성표 삭제
-
-	         // 보내는데 성공하면?
-	         JOptionPane.showMessageDialog(BBMG, selectedPR + "삭제.");
-	         // 보내는데 실패하면?
-	         // JOptionPane.showMessageDialog(BBMG, selectedPR + "삭제 실패.");
-
+	       //채널객채 찾아서 키로 뷰 찾고 뷰객채에 뷰키로 브로드객체 찾아서 null이 아니면!!!! 삭제
+	         ChannelPro cp = channelProManager.selectCp(selectedPR,selectedTV);
+	         String day =textField.getText();
+    		 String startTime= selectedST+":"+selectedSM+":00";
+    		 String endTime = selectedFT+":"+selectedFM+":00";
+	         if( cp != null) {
+	        	 //채널프로에서 이미 있어
+	        	 System.out.println("채널프로에 있대");
+	        	 View view =viewManager.select(cp.getCp_num(),selectedDay,selectedState);
+	        	 if(view != null) {
+	        		 //뷰에도 있데
+	        		 System.out.println("뷰에도 있대");
+	        		 ;
+	        		 BroadTime bt = broadTimeManager.select(view.getVw_key(),day,startTime);
+	        		 if(bt != null) {
+	        			 //딜리트
+	        			 broadTimeManager.delete(bt.getBt_num());
+	        			 JOptionPane.showMessageDialog(BBMG, selectedPR + "삭제.");
+	        			 return;
+	        		 }//편성표에만 없대 등록해
+	        		 JOptionPane.showMessageDialog(mainPanel, "편성표에 등록 되어 있지 않습니다");
+	        		 return;
+	        	 }//뷰에 없대 뷰 부터 다 등록해
+	        	 JOptionPane.showMessageDialog(mainPanel, "편성표에 등록 되어 있지 않습니다");
+        		 return;
+	         }
+	         JOptionPane.showMessageDialog(mainPanel, "편성표에 등록 되어 있지 않습니다");
+    		 return; 
 	      });
 
 	      backButton.addActionListener(e -> {
@@ -1198,16 +1319,21 @@ private  JPanel panelUserData() {
 	   }
 private void setProgramList() {
 	   
-		pros = programManager.getProgramList();   
+		pros = programManager.getProgramList();
+		pross = programManager.getProgramList();
 		prNames =programManager.getProgramList();  
 	      // 여기서 for문으로 listModel.addElement(스트링); 해서 즐겨찾기 등록 	      
 	   prBox.removeAllItems();
+	   prsBox.removeAllItems();
 	   prBox2.removeAllItems();
 	   for(String i : pros) {
 	    	prBox.addItem(i);
 	   }
 	   for(String i : prNames) {
 	    	prBox2.addItem(i);
+	   }
+	   for(String i : pross) {
+	    	prsBox.addItem(i);
 	   }
    }
    private void insertBookMark(int userKey, String selectedProgram) {

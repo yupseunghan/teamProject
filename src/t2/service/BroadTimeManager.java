@@ -39,4 +39,21 @@ public class BroadTimeManager {
 		List<BroadTime> list = broadTimeDao.getBroadTimeList(channel,week);
 		return list;
 	}
+
+
+	public BroadTime select(int vw_key, String day, String selectedST) {
+		BroadTime bt = broadTimeDao.selectBt(vw_key,day,selectedST);
+		return bt;
+	}
+
+
+	public void insertBt(int vw_key, String day, String startTime, String endTime) {
+		broadTimeDao.insertBt(vw_key,day,startTime,endTime);
+	}
+
+
+	public void delete(int bt_num) {
+		broadTimeDao.deleteBt(bt_num);
+		
+	}
 }

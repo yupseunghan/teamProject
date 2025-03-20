@@ -40,4 +40,13 @@
 		    ORDER BY BT_STARTTIME
 			;
 	</select>
+	<select id="selectBt"  resultType="t2.model.vo.BroadTime">
+		select* from broadtime where bt_vw_key=#{vw_key} and bt_date =#{bt_date} and bt_starttime = #{bt_st}
+	</select>
+	<insert id="insertBt">
+		insert into broadtime (bt_vw_key,bt_date,bt_starttime,bt_endtime) values(#{vw_key},#{bt_date},#{bt_st},#{bt_end})
+	</insert>
+	<delete id="deleteBt">
+		delete from broadtime where bt_num=#{bt_num}
+	</delete>
 </mapper>
