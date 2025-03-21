@@ -10,7 +10,7 @@ import java.awt.event.FocusEvent;
 import java.awt.event.FocusListener;
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.List;	
+import java.util.List;
 
 import javax.swing.DefaultListModel;
 import javax.swing.JButton;
@@ -83,6 +83,7 @@ public class FrameMain extends JFrame {
    private JComboBox<String> prBox2 = new JComboBox<>(prNames);
    private JComboBox<String> grBox = new JComboBox<>(grNames);
    private List<String> bmListStr = new ArrayList<String>();
+   public static PanelUser PURES;
    public FrameMain() {
       setTitle("방송 편성표 시스템");
       setSize(400, 500);
@@ -251,7 +252,7 @@ public static void switchPanel(String panelName) {
       return adminPanel;
 
    }
-	 private static JPanel panelAdminUSERBoard() {
+	 private JPanel panelAdminUSERBoard() {
 		JPanel adminUSERBoardPanel = new JPanel(new GridBagLayout());
 		GridBagConstraints gbc = new GridBagConstraints();
 		gbc.fill = GridBagConstraints.BOTH;

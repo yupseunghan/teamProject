@@ -1,4 +1,4 @@
-package broadGUI;
+package t2.swing;
 
 import java.awt.BorderLayout;
 import java.awt.GridBagConstraints;
