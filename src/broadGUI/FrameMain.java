@@ -357,6 +357,12 @@ public class FrameMain extends JFrame {
 		fMinBox.addActionListener(e -> {
 		});
 
+		// 방영상태 박스. 이건 이대로 ok
+		String[] states = { "방영상태를 선택해주세요.", "생방송", "재방송", "휴방" };
+		JComboBox<String> stateBox = new JComboBox<>(states);
+		stateBox.addActionListener(e -> {
+		});
+		
 		JButton showSchedulePanel = new JButton("편성표 조회");
 
 		JButton tvProAddBtn = new JButton("프로그램 등록");
@@ -373,10 +379,11 @@ public class FrameMain extends JFrame {
 		addComponent(BBMG, sMinBox, 0, 6, gbc);
 		addComponent(BBMG, fTimeBox, 0, 7, gbc);
 		addComponent(BBMG, fMinBox, 0, 8, gbc);
-		addComponent(BBMG, tvProAddBtn, 0, 9, gbc);
-		addComponent(BBMG, tvProUpdBtn, 0, 10, gbc);
-		addComponent(BBMG, tvProDelBtn, 0, 11, gbc);
-		addComponent(BBMG, backButton, 0, 12, gbc);
+		addComponent(BBMG, stateBox, 0, 9, gbc);
+		addComponent(BBMG, tvProAddBtn, 0, 10, gbc);
+		addComponent(BBMG, tvProUpdBtn, 0, 11, gbc);
+		addComponent(BBMG, tvProDelBtn, 0, 12, gbc);
+		addComponent(BBMG, backButton, 0, 13, gbc);
 
 		showSchedulePanel.addActionListener(e -> {
 			if (PSRES != null) {
@@ -400,6 +407,7 @@ public class FrameMain extends JFrame {
 			int SMIndex = sMinBox.getSelectedIndex();
 			int FTIndex = fTimeBox.getSelectedIndex();
 			int FMIndex = fMinBox.getSelectedIndex();
+			int stateIndex = stateBox.getSelectedIndex();
 
 			if (PRIndex < 0 || TVIndex < 0 || STIndex < 0 || FTIndex < 0) {
 				JOptionPane.showMessageDialog(BBMG, "선택해주세요.");
@@ -411,12 +419,21 @@ public class FrameMain extends JFrame {
 				return;
 			}
 
+
 			String selectedPR = prBox.getItemAt(PRIndex);
 			String selectedTV = tvBox.getItemAt(TVIndex);
 			String selectedST = sTimeBox.getItemAt(STIndex);
 			String selectedSM = sMinBox.getItemAt(SMIndex);
 			String selectedFT = fTimeBox.getItemAt(FTIndex);
 			String selectedFM = fMinBox.getItemAt(FMIndex);
+			
+			String selectedState = null;
+			switch(stateIndex) {
+				case 1 : selectedState = "생방송"; break;
+				case 2 : selectedState = "재방송"; break;
+				case 3 : selectedState = "휴방"; break;
+				default : break;
+				};
 
 			if (SMIndex <= 0 || FMIndex <= 0) {
 				selectedSM = "0";
@@ -430,6 +447,7 @@ public class FrameMain extends JFrame {
 			JOptionPane.showMessageDialog(BBMG, selectedPR + "등록.");
 			// 보내는데 실패하면?
 			// JOptionPane.showMessageDialog(BBMG, selectedPR + "등록 실패.");
+			System.out.println(selectedPR+selectedTV+selectedST+selectedSM+selectedFT+selectedFM+selectedState);
 
 		});
 
@@ -446,12 +464,21 @@ public class FrameMain extends JFrame {
 			int SMIndex = sMinBox.getSelectedIndex();
 			int FTIndex = fTimeBox.getSelectedIndex();
 			int FMIndex = fMinBox.getSelectedIndex();
+			int stateIndex = stateBox.getSelectedIndex();
 
 			if (STIndex <= 0 || FTIndex <= 0) {
 				JOptionPane.showMessageDialog(BBMG,
 						((STIndex == 0) ? "시작시간 " : "") + ((FTIndex == 0) ? "끝시간 " : "") + "선택해주세요");
 				return;
 			}
+			
+			String selectedState = null;
+			switch(stateIndex) {
+			case 1 : selectedState = "생방송"; break;
+			case 2 : selectedState = "재방송"; break;
+			case 3 : selectedState = "휴방"; break;
+			default : break;
+			};
 
 			String selectedPR = prBox.getItemAt(PRIndex);
 			String selectedTV = tvBox.getItemAt(TVIndex);
@@ -476,6 +503,7 @@ public class FrameMain extends JFrame {
 					JOptionPane.showMessageDialog(BBMG, selectedPR + "수정할 내용을 입력해주세요.");
 
 					res[0] = 1;
+					System.out.println(selectedPR+selectedTV+selectedST+selectedSM+selectedFT+selectedFM+selectedState);
 					return;
 				}
 				// 없으면
@@ -492,8 +520,13 @@ public class FrameMain extends JFrame {
 
 			// 보내는데 성공하면?
 			if (true) {
+				
+				if(stateIndex==0) {/*방영상태가 선택 안됐으니 방송명, 방송사명, 시간만 update*/}
+				else {/*방송명, 방송사명, 시간, 방영상태 update*/}
+				
 				JOptionPane.showMessageDialog(BBMG, selectedPR + "등록.");
 				res[0] = 0;
+				System.out.println(selectedPR+selectedTV+selectedST+selectedSM+selectedFT+selectedFM+selectedState);
 				return;
 			}
 			// 보내는데 실패하면?
@@ -501,6 +534,8 @@ public class FrameMain extends JFrame {
 			 * if(true) { JOptionPane.showMessageDialog(BBMG, selectedPR + "등록 실패."); res[0]
 			 * = 0; return; }
 			 */
+			
+			
 		});
 
 		/////////////////////////////////////// 삭제
@@ -538,7 +573,7 @@ public class FrameMain extends JFrame {
 				selectedFM = "0";
 			}
 
-			// selectedPR, selectedTV, selectedST, selectedSM, selectedFT, selectedFM 이용해서
+			// selectedPR, selectedTV, selectedST, selectedSM, selectedFT, selectedFM (방영상태는 제외?)이용해서
 			// 해당하는 편성표 삭제
 
 			// 보내는데 성공하면?
@@ -546,6 +581,7 @@ public class FrameMain extends JFrame {
 			// 보내는데 실패하면?
 			// JOptionPane.showMessageDialog(BBMG, selectedPR + "삭제 실패.");
 
+			System.out.println(selectedPR+selectedTV+selectedST+selectedSM+selectedFT+selectedFM+"null");
 		});
 
 		backButton.addActionListener(e -> {
