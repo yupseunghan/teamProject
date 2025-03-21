@@ -10,7 +10,7 @@ import java.awt.event.FocusEvent;
 import java.awt.event.FocusListener;
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.List;
+import java.util.List;	
 
 import javax.swing.DefaultListModel;
 import javax.swing.JButton;
@@ -251,41 +251,44 @@ public static void switchPanel(String panelName) {
       return adminPanel;
 
    }
-   private  JPanel panelAdminUSERBoard() {
-	      JPanel adminUSERBoardPanel = new JPanel(new GridBagLayout());
-	      GridBagConstraints gbc = new GridBagConstraints();
-	      gbc.fill = GridBagConstraints.BOTH;
-	      gbc.weightx = 1.0;
-	      gbc.weighty = 1.0;
+	 private static JPanel panelAdminUSERBoard() {
+		JPanel adminUSERBoardPanel = new JPanel(new GridBagLayout());
+		GridBagConstraints gbc = new GridBagConstraints();
+		gbc.fill = GridBagConstraints.BOTH;
+		gbc.weightx = 1.0;
+		gbc.weighty = 1.0;
 
-	      JButton USUPButton = new JButton("유저 권한 변경");   // 권한이 사용자인 유저들만 띄워서 권한을 관리자로 변경하는 버튼
-	      JButton USVWButton = new JButton("사용자 조회");   // 모든 id들을 띄우는 버튼
-	      JButton backButton = new JButton("처음으로");
-	      
-	      
-	      addComponent(adminUSERBoardPanel, USUPButton, 0, 0, gbc);
-	      addComponent(adminUSERBoardPanel, USVWButton, 0, 1, gbc);
-	      addComponent(adminUSERBoardPanel, backButton, 0, 2, gbc);
-	      
-	      //mainPanel.add(panelAdminTVBoard(), "adminTVboard");
-	      //mainPanel.add(panelAdminUSERBoard(), "adminUSERboard");
-	      
-	      USUPButton.addActionListener(e -> {
-	         JOptionPane.showMessageDialog(adminUSERBoardPanel, "유저 권한 변경");
-	         //switchPanel("adminTVboard");
-	         
-	      });
-	      USVWButton.addActionListener(e -> {
-	         JOptionPane.showMessageDialog(adminUSERBoardPanel, "사용자 조회");
-	         //switchPanel("adminUSERboard");
-	         
-	      });
-	      backButton.addActionListener(e -> {
-	         switchPanel("admin");
-	      });
+		JButton USUPButton = new JButton("유저 권한 변경"); // 권한이 사용자인 유저들만 띄워서 권한을 관리자로 변경하는 버튼
+		JButton USVWButton = new JButton("사용자 조회"); // 모든 id들을 띄우는 버튼
+		JButton backButton = new JButton("처음으로");
 
-	      return adminUSERBoardPanel;
-	   }
+		//addComponent(adminUSERBoardPanel, USUPButton, 0, 0, gbc);
+		addComponent(adminUSERBoardPanel, USVWButton, 0, 1, gbc);
+		addComponent(adminUSERBoardPanel, backButton, 0, 2, gbc);
+
+		// mainPanel.add(panelAdminTVBoard(), "adminTVboard");
+		// mainPanel.add(panelAdminUSERBoard(), "adminUSERboard");
+
+		USUPButton.addActionListener(e -> {
+			JOptionPane.showMessageDialog(adminUSERBoardPanel, "유저 권한 변경");
+			// switchPanel("adminTVboard");
+
+		});
+		USVWButton.addActionListener(e -> {
+			JOptionPane.showMessageDialog(adminUSERBoardPanel, "사용자 조회");
+			if (PURES != null) {
+				PURES.dispose();
+				PURES = null;
+			}
+			PURES = new PanelUser();
+
+		});
+		backButton.addActionListener(e -> {
+			switchPanel("admin");
+		});
+
+		return adminUSERBoardPanel;
+	}
    private JPanel panelAdminTVBoard() {
 	      JPanel adminTVBoardPanel = new JPanel(new GridBagLayout());
 	      GridBagConstraints gbc = new GridBagConstraints();

@@ -40,7 +40,7 @@ public class ChannelManager {
 			return false;
 		return true;
 	}
-	public void sinsertChannel(String tVNameText) {
+	public void insertChannel(String tVNameText) {
 		channelDao.insertChannel(tVNameText);
 		
 	}
