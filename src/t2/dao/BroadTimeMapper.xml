@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="t2.dao.BroadTimeDAO">
+	<resultMap type="t2.model.vo.BroadTime" id="BroadTimeMap">
+		<!-- property : ScoreVO의 필드명, column: score 테이블의 속성명 -->
+		<id property="bt_num" column="bt_num"/>
+		<result property="bt_vw_key" column="bt_vw_key"/>
+		<result property="bt_date" column="bt_date"/>
+		<result property="bt_startTime" column="bt_startTime"/>
+		<result property="bt_endTime" column="bt_endTime"/>
+		<result property="ch_name" column="ch_name"/>
+		<result property="we_name" column="we_name"/> 
+		<result property="pg_name" column="pg_name"/> 
+		<result property="pr_gr_name" column="pr_gr_name"/> 
+		<result property="pa_age" column="pa_age"/> 
+		<result property="vw_state" column="vw_state"/>  
+	</resultMap>
+	<select id="getBroadTimeList" resultType="t2.model.vo.BroadTime">
+		SELECT 
+		    CH_NAME,BT_DATE, WE_NAME ,PG_NAME, PR_GR_NAME,PA_AGE,VW_STATE,BT_STARTTIME,BT_ENDTIME
+		FROM
+			BROADTIME
+		        JOIN
+		    VIEW ON VW_KEY = BT_VW_KEY
+				JOIN
+			WEEK ON WE_KEY = VW_WE_KEY
+				join
+			CHANNEL_PRO ON CP_NUM = VW_CP_NUM 
+				join
+			CHANNEL ON CH_NUM = CP_CH_NUM
+				JOIN
+			PROGRAM ON PG_KEY = CP_PG_KEY
+				JOIN
+			PROGRAM_AGE ON PA_KEY = PG_PA_KEY
+				JOIN
+			PROGRAMGENRE ON PG_KEY = PR_PG_KEY
+		    WHERE CH_NAME=#{ch} AND WE_NAME=#{we}
+		    ORDER BY BT_STARTTIME
+			;
+	</select>
+	<select id="selectBt"  resultType="t2.model.vo.BroadTime">
+		select* from broadtime where bt_vw_key=#{vw_key} and bt_date =#{bt_date} and bt_starttime = #{bt_st}
+	</select>
+	<insert id="insertBt">
+		insert into broadtime (bt_vw_key,bt_date,bt_starttime,bt_endtime) values(#{vw_key},#{bt_date},#{bt_st},#{bt_end})
+	</insert>
+	<delete id="deleteBt">
+		delete from broadtime where bt_num=#{bt_num}
+	</delete>
+</mapper>

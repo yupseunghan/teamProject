@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="t2.dao.GenreDAO">
+	<select id="checkGenre" resultType="java.lang.String">
+		select * from genre where gr_name= #{name};
+	</select>
+	<insert id="insertGenre">
+		insert into Genre (gr_name) values(#{name});
+	</insert>
+	
+	<update id="updateGenre">
+		update genre set gr_name=#{new} where gr_name=#{old};
+	</update>
+	<delete id="delGenre">
+		delete from genre where gr_name=#{name};
+	</delete>
+	<select id="getGenreName" resultType="java.lang.String">
+		select * from genre;
+	</select>
+</mapper>

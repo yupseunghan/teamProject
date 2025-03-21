@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="t2.dao.ChannelProDAO">
+
+	<select id="selectCp" resultType="t2.model.vo.ChannelPro">
+		select * from channel_pro
+			join
+		program on pg_key = cp_pg_key
+			join
+		channel on ch_num = cp_ch_num
+		where pg_name=#{pg} and ch_name = #{ch}
+	</select>
+	<insert id="insertCp">
+		insert into channel_pro (cp_pg_key,cp_ch_num) values((select pg_key from program where pg_name =#{pg})
+		,(select ch_num from channel where ch_name =#{ch}))
+	</insert>
+</mapper>

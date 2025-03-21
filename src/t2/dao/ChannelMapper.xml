@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="t2.dao.ChannelDAO">
+
+	<select id="getChannelList" resultType="java.lang.String">
+	select ch_name from channel;
+	</select>
+	<select id="selectChannel" resultType="t2.model.vo.Channel">
+		select* from channel where ch_name = #{name};
+	</select>
+	<insert id="insertChannel">
+		insert into channel (ch_name) values (#{name});
+	</insert>
+	<update id="updateChannel">
+		update channel set ch_name=#{new} where ch_name = #{old};
+	</update>
+	<delete id="delChannel">
+		delete from channel where ch_name=#{name};
+	</delete>
+</mapper>

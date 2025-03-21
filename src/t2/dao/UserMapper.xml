@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="t2.dao.UserDAO">
+
+	<select id="getAuthority" resultType="java.lang.String">
+		select us_authority from user where us_id=#{id} and us_pw=#{pw};
+	</select>
+	<select id="Repeat" resultType="java.lang.String">
+		select us_id from user where us_id=#{id};
+	</select>
+	<insert id="insertUser">
+		insert into user(us_id,us_pw,us_name) values(#{id},#{pw},#{name});
+	</insert>
+	<select id="getUser" resultType="t2.model.vo.User">
+		select* from User where us_key=#{key};
+	</select>
+	<select id="getUserNum" resultType="java.lang.Integer">
+		select us_key from user where us_id=#{id};
+	</select>
+	<update id="userUpdate">
+		update user set us_id=#{id} , us_pw=#{pw} ,us_name=#{name} where us_key=#{key}
+	</update>
+</mapper>

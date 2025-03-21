@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="t2.dao.ProgramDAO">
+	<select id="getProgramList" resultType="java.lang.String">
+		select pg_name from program where pg_show = "Y";
+	</select>
+	<select id="getPgKey" resultType="java.lang.Integer">
+		select pg_key from program where pg_name=#{program};
+	</select>
+	<insert id="insertProgram">
+		insert into program (pg_name,pg_pa_key) value(#{program},#{ageKey});
+	</insert>
+	<select id="searchName" resultType="java.lang.String">
+		select pg_name from program where pg_name = #{program};
+	</select>
+	<update id="updateProgram">
+		update program set pg_name= #{program},
+ pg_pa_key =(select pa_key from program_age where pa_age=#{age})
+ where pg_name=#{program}; 
+	</update>
+	<update id="updateProgramAll">
+	update program set pg_name= #{new},
+ pg_pa_key =(select pa_key from program_age where pa_age=#{age})
+ where pg_name=#{old};
+	</update>
+	<update id="delProgram">
+		update program set pg_show="N" where pg_name=#{program};
+	</update>
+</mapper>

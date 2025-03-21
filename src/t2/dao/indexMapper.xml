@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="t2.dao.indexDAO">
+	<resultMap type="t2.model.vo.index" id="indexMap">
+	<id property="in_key" column="in_key"/>
+	<result property="in_us_key" column="in_us_key"/>
+	<result property="in_pg_key" column="in_pg_key"/>
+	</resultMap>
+	<select id="getBookMarkList" resultMap="indexMap">
+		select pg_name from `index`
+    		join
+		program on pg_key = in_pg_key
+		where in_us_key=#{key};
+	</select>
+	
+	<delete id="delBookMark">
+	delete from `index` where in_pg_key=(select pg_key from program where pg_name=#{program}) and 
+	in_us_key=#{key};
+	</delete>
+	<insert id="insertBookMark">
+		insert into `index` (in_us_key,in_pg_key) value (#{uskey},#{pgkey});
+	</insert>
+</mapper>
